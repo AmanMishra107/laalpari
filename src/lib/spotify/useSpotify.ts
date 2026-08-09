@@ -230,6 +230,9 @@ export function useSpotify() {
     () => void playerRef.current?.previousTrack().catch(() => undefined),
     [],
   );
+  const seek = useCallback((ms: number) => {
+    void playerRef.current?.seek(ms).catch(() => undefined);
+  }, []);
   const setVolume = useCallback((v: number) => {
     setVolumeState(v);
     void playerRef.current?.setVolume(v).catch(() => undefined);
@@ -256,6 +259,8 @@ export function useSpotify() {
     next,
     previous,
     setVolume,
+    seek,
+
     setShuffle,
     setRepeat,
     resolve,

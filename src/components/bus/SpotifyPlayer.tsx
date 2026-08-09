@@ -1,4 +1,4 @@
-import { Pause, Play, Repeat, Shuffle, SkipBack, SkipForward, Volume2 } from "lucide-react";
+import { Pause, Play, Repeat, Shuffle, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react";
 import type { SpotifyTrack } from "@/lib/spotify/api";
 
 const fmt = (ms: number) => {
@@ -20,6 +20,9 @@ export function SpotifyPlayer({
   onNext,
   onPrev,
   onVolume,
+  onSeek,
+  volumeEnabled,
+
   onShuffle,
   onRepeat,
   message,
@@ -40,6 +43,9 @@ export function SpotifyPlayer({
   onNext: () => void;
   onPrev: () => void;
   onVolume: (v: number) => void;
+  onSeek?: (ms: number) => void;
+  volumeEnabled?: boolean;
+
   onShuffle: () => void;
   onRepeat: () => void;
   message: string | null;
@@ -110,14 +116,25 @@ export function SpotifyPlayer({
 
       <div className="mt-3 flex items-center gap-2">
         <span className="font-mono text-[9px] tabular-nums text-cream/60">{fmt(progress)}</span>
-        <div className="h-[3px] flex-1 overflow-hidden rounded-full bg-cream/25">
-          <div
-            className="h-full rounded-full bg-cream transition-[width] duration-1000 ease-linear"
-            style={{ width: `${pct}%` }}
+        <div className="relative h-4 flex-1">
+          <div className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 overflow-hidden rounded-full bg-cream/25">
+            <div className="h-full rounded-full bg-cream" style={{ width: `${pct}%` }} />
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={Math.max(1, duration)}
+            step={1000}
+            value={Math.min(progress, duration || 0)}
+            onChange={(e) => onSeek?.(Number(e.target.value))}
+            disabled={!duration || !onSeek}
+            aria-label="Seek"
+            className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent opacity-0 disabled:cursor-default"
           />
         </div>
         <span className="font-mono text-[9px] tabular-nums text-cream/60">{fmt(duration)}</span>
       </div>
+
 
       <div className="mt-2 flex items-center gap-3">
         <button
@@ -136,7 +153,14 @@ export function SpotifyPlayer({
         >
           <Repeat className="size-3.5" />
         </button>
-        <Volume2 className="size-3.5 text-cream/45" aria-hidden />
+        <button
+          onClick={() => onVolume(volume > 0 ? 0 : 0.7)}
+          aria-label={volume > 0 ? "Mute" : "Unmute"}
+          disabled={volumeEnabled === false}
+          className="text-cream/45 transition-colors hover:text-cream/80 disabled:opacity-40"
+        >
+          {volume > 0 ? <Volume2 className="size-3.5" /> : <VolumeX className="size-3.5" />}
+        </button>
         <input
           type="range"
           min={0}
@@ -144,9 +168,16 @@ export function SpotifyPlayer({
           step={0.05}
           value={volume}
           onChange={(e) => onVolume(Number(e.target.value))}
+          disabled={volumeEnabled === false}
+          title={
+            volumeEnabled === false
+              ? "Volume is controlled by Spotify — connect Premium for in-app volume"
+              : "Volume"
+          }
           aria-label="Volume"
-          className="h-[3px] w-20 accent-cream"
+          className="h-[3px] w-20 accent-cream disabled:opacity-40"
         />
+
         <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.2em] text-cream/55">
           {isPlaying ? "On air" : "Paused at the window"}
         </span>

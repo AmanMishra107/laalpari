@@ -368,7 +368,14 @@ function Index() {
               onNext={goNext}
               onPrev={goPrev}
 
-              onVolume={s.setVolume}
+              onSeek={(ms) =>
+                usePremium ? void s.seek?.(ms) : embed.seek(Math.floor(ms / 1000))
+              }
+              volumeEnabled={usePremium}
+              onVolume={(v) => {
+                s.setVolume(v);
+                if (!usePremium) embed.setVolume(v);
+              }}
               onShuffle={() => s.setShuffle(!s.shuffle)}
               onRepeat={() => s.setRepeat(!s.repeat)}
               message={j.moving ? "CHANGING RADIO…" : s.message}
