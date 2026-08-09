@@ -89,9 +89,11 @@ function Index() {
     if (!list.length) return false;
     const idx = ((i % list.length) + list.length) % list.length;
     setQueueIndex(idx);
+    setStarted(true);
     embedLoadRef.current?.(list[idx]!.uri);
     return true;
   }, []);
+
 
 
   const embed = useSpotifyEmbed(() => {
