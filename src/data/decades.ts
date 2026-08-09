@@ -16,6 +16,8 @@ export type Decade = {
   description: string;
   /** Optional Spotify playlist ID powering this decade. */
   playlistId?: string;
+  /** Number of leading playlist tracks to skip. */
+  skipTracks?: number;
   tracks: Track[];
 };
 
@@ -31,6 +33,7 @@ export const decades: Decade[] = [
     departure: "06:15",
     description: "Slow ghats, transistor radio, morning fog.",
     playlistId: "6mx7rVYF6ed2JTMegQ8SY0",
+    skipTracks: 2,
 
     tracks: [
       { title: "Lag Ja Gale", artist: "Lata Mangeshkar" },
