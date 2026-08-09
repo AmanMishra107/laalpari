@@ -23,6 +23,9 @@ export function SpotifyPlayer({
   onShuffle,
   onRepeat,
   message,
+  embedRef,
+  embedActive,
+  embedLoaded,
 }: {
   track: SpotifyTrack | null;
   fallbackTitle: string;
@@ -40,6 +43,9 @@ export function SpotifyPlayer({
   onShuffle: () => void;
   onRepeat: () => void;
   message: string | null;
+  embedRef?: React.RefObject<HTMLDivElement | null>;
+  embedActive?: boolean;
+  embedLoaded?: boolean;
 }) {
   const pct = duration ? Math.min(100, (progress / duration) * 100) : 0;
 
