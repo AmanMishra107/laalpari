@@ -81,7 +81,7 @@ export const decades: Decade[] = [
   },
   {
     id: "90s",
-    playlistId: "0Gd0yQzB6wttuaLlawHlYI",
+    playlistId: "2AVjI8Z57bqMJVtU3V9X1Q",
     label: "90s",
     title: "Last Seat Legends",
     subtitle: "The window seat anthem era",
