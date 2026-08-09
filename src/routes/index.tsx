@@ -282,10 +282,13 @@ function Index() {
             <div className="max-w-[19rem] rounded-lg bg-cream/70 p-3 backdrop-blur-[2px]">
               <DecadePlaylist
                 decade={decade}
+                tracks={queue}
+                activeIndex={queueIndex}
                 onSelect={(i) => void playIndex(i)}
                 activeTitle={s.track?.name ?? null}
                 connected={s.connected}
               />
+
               {j.stop.decadeIds.length > 1 && (
                 <div className="mt-2 flex gap-1">
                   {j.stop.decadeIds.map((d) => (
