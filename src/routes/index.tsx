@@ -344,7 +344,18 @@ function Index() {
               </a>
             )}
             <SpotifyPlayer
-              track={usePremium ? s.track : current ? { name: current.title, artists: current.artist, artwork: null } as never : s.track}
+              track={
+                usePremium
+                  ? s.track
+                  : current
+                    ? ({
+                        name: current.title,
+                        artists: current.artist,
+                        artwork: artwork ?? null,
+                      } as never)
+                    : s.track
+              }
+
               fallbackTitle={first.title}
               fallbackArtist={first.artist}
               isPlaying={usePremium ? isPlaying : embed.isPlaying}
