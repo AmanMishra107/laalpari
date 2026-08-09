@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getPlaylistTracks } from "@/lib/playlist.functions";
+import { getPlaylistTracks, getTrackArtwork } from "@/lib/playlist.functions";
 
 import busScene from "@/assets/bus-scene.jpg";
 import { getDecade } from "@/data/decades";
