@@ -350,9 +350,6 @@ function Index() {
               isPlaying={usePremium ? isPlaying : embed.isPlaying}
               progress={usePremium ? s.progress : embed.position}
               duration={usePremium ? s.duration || 0 : embed.duration}
-              volume={s.volume}
-              shuffle={s.shuffle}
-              repeat={s.repeat}
               embedRef={embed.hostRef}
               embedActive={!usePremium}
               embedLoaded={Boolean(embed.uri)}
@@ -371,13 +368,6 @@ function Index() {
               onSeek={(ms) =>
                 usePremium ? void s.seek?.(ms) : embed.seek(Math.floor(ms / 1000))
               }
-              volumeEnabled={usePremium}
-              onVolume={(v) => {
-                s.setVolume(v);
-                if (!usePremium) embed.setVolume(v);
-              }}
-              onShuffle={() => s.setShuffle(!s.shuffle)}
-              onRepeat={() => s.setRepeat(!s.repeat)}
               message={j.moving ? "CHANGING RADIO…" : s.message}
             />
           </div>

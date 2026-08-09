@@ -34,6 +34,8 @@ export function useSpotifyEmbed(onEnded?: () => void) {
   const controllerRef = useRef<EmbedController | null>(null);
   const pendingRef = useRef<string | null>(null);
   const endedRef = useRef(false);
+  const retryRef = useRef<number[]>([]);
+  const gotUpdateRef = useRef(false);
   const onEndedRef = useRef(onEnded);
   onEndedRef.current = onEnded;
   const [ready, setReady] = useState(false);
@@ -56,6 +58,11 @@ export function useSpotifyEmbed(onEnded?: () => void) {
           controller.addListener("playback_update", ((e: {
             data: { isPaused: boolean; position: number; duration: number };
           }) => {
+            if (!e.data.isPaused || e.data.position > 0) {
+              gotUpdateRef.current = true;
+              retryRef.current.forEach((t) => window.clearTimeout(t));
+              retryRef.current = [];
+            }
             setIsPlaying(!e.data.isPaused);
             setPosition(e.data.position);
             setDuration(e.data.duration);
@@ -88,16 +95,25 @@ export function useSpotifyEmbed(onEnded?: () => void) {
   const load = useCallback((nextUri: string, autoplay = true) => {
     pendingRef.current = nextUri;
     endedRef.current = false;
+    gotUpdateRef.current = false;
     setUri(nextUri);
     setPosition(0);
-    const c = controllerRef.current;
-    if (!c) return;
-    c.loadUri(nextUri);
-    if (autoplay) {
-      c.play();
-      window.setTimeout(() => c.play(), 400);
-    }
+    retryRef.current.forEach((t) => window.clearTimeout(t));
+    retryRef.current = [];
+
+    // The iframe may still be booting on the very first clicks — retry until it answers.
+    const attempt = (n: number) => {
+      const c = controllerRef.current;
+      if (!c || pendingRef.current !== nextUri) return;
+      c.loadUri(nextUri);
+      if (autoplay) c.play();
+      if (!gotUpdateRef.current && n < 6) {
+        retryRef.current.push(window.setTimeout(() => attempt(n + 1), 500));
+      }
+    };
+    attempt(0);
   }, []);
+
 
   const toggle = useCallback(() => controllerRef.current?.togglePlay(), []);
   const seek = useCallback((seconds: number) => {

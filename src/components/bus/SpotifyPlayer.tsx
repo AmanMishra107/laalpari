@@ -1,4 +1,4 @@
-import { Pause, Play, Repeat, Shuffle, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react";
+import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import type { SpotifyTrack } from "@/lib/spotify/api";
 
 const fmt = (ms: number) => {
@@ -13,18 +13,11 @@ export function SpotifyPlayer({
   isPlaying,
   progress,
   duration,
-  volume,
-  shuffle,
-  repeat,
   onToggle,
   onNext,
   onPrev,
-  onVolume,
   onSeek,
-  volumeEnabled,
 
-  onShuffle,
-  onRepeat,
   message,
   embedRef,
   embedActive,
@@ -36,18 +29,11 @@ export function SpotifyPlayer({
   isPlaying: boolean;
   progress: number;
   duration: number;
-  volume: number;
-  shuffle: boolean;
-  repeat: boolean;
   onToggle: () => void;
   onNext: () => void;
   onPrev: () => void;
-  onVolume: (v: number) => void;
   onSeek?: (ms: number) => void;
-  volumeEnabled?: boolean;
 
-  onShuffle: () => void;
-  onRepeat: () => void;
   message: string | null;
   embedRef?: React.RefObject<HTMLDivElement | null>;
   embedActive?: boolean;
@@ -135,53 +121,6 @@ export function SpotifyPlayer({
         <span className="font-mono text-[9px] tabular-nums text-cream/60">{fmt(duration)}</span>
       </div>
 
-
-      <div className="mt-2 flex items-center gap-3">
-        <button
-          onClick={onShuffle}
-          aria-pressed={shuffle}
-          aria-label="Shuffle"
-          className={`transition-colors ${shuffle ? "text-spotify" : "text-cream/45 hover:text-cream/80"}`}
-        >
-          <Shuffle className="size-3.5" />
-        </button>
-        <button
-          onClick={onRepeat}
-          aria-pressed={repeat}
-          aria-label="Repeat"
-          className={`transition-colors ${repeat ? "text-spotify" : "text-cream/45 hover:text-cream/80"}`}
-        >
-          <Repeat className="size-3.5" />
-        </button>
-        <button
-          onClick={() => onVolume(volume > 0 ? 0 : 0.7)}
-          aria-label={volume > 0 ? "Mute" : "Unmute"}
-          disabled={volumeEnabled === false}
-          className="text-cream/45 transition-colors hover:text-cream/80 disabled:opacity-40"
-        >
-          {volume > 0 ? <Volume2 className="size-3.5" /> : <VolumeX className="size-3.5" />}
-        </button>
-        <input
-          type="range"
-          min={0}
-          max={1}
-          step={0.05}
-          value={volume}
-          onChange={(e) => onVolume(Number(e.target.value))}
-          disabled={volumeEnabled === false}
-          title={
-            volumeEnabled === false
-              ? "Volume is controlled by Spotify — connect Premium for in-app volume"
-              : "Volume"
-          }
-          aria-label="Volume"
-          className="h-[3px] w-20 accent-cream disabled:opacity-40"
-        />
-
-        <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.2em] text-cream/55">
-          {isPlaying ? "On air" : "Paused at the window"}
-        </span>
-      </div>
 
       {message && (
         <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.18em] text-cream/80">
