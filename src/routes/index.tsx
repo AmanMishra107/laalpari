@@ -371,6 +371,7 @@ function Index() {
               onSeek={(ms) =>
                 usePremium ? void s.seek?.(ms) : embed.seek(Math.floor(ms / 1000))
               }
+              volumeEnabled={usePremium}
               onVolume={(v) => {
                 s.setVolume(v);
                 if (!usePremium) embed.setVolume(v);
