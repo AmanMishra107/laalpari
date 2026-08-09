@@ -34,6 +34,8 @@ export function useSpotifyEmbed(onEnded?: () => void) {
   const controllerRef = useRef<EmbedController | null>(null);
   const pendingRef = useRef<string | null>(null);
   const endedRef = useRef(false);
+  const retryRef = useRef<number[]>([]);
+  const gotUpdateRef = useRef(false);
   const onEndedRef = useRef(onEnded);
   onEndedRef.current = onEnded;
   const [ready, setReady] = useState(false);
@@ -56,6 +58,11 @@ export function useSpotifyEmbed(onEnded?: () => void) {
           controller.addListener("playback_update", ((e: {
             data: { isPaused: boolean; position: number; duration: number };
           }) => {
+            if (!e.data.isPaused || e.data.position > 0) {
+              gotUpdateRef.current = true;
+              retryRef.current.forEach((t) => window.clearTimeout(t));
+              retryRef.current = [];
+            }
             setIsPlaying(!e.data.isPaused);
             setPosition(e.data.position);
             setDuration(e.data.duration);
@@ -84,9 +91,6 @@ export function useSpotifyEmbed(onEnded?: () => void) {
       document.body.appendChild(s);
     }
   }, []);
-
-  const retryRef = useRef<number[]>([]);
-  const gotUpdateRef = useRef(false);
 
   const load = useCallback((nextUri: string, autoplay = true) => {
     pendingRef.current = nextUri;
