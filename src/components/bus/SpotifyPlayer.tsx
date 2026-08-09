@@ -110,14 +110,25 @@ export function SpotifyPlayer({
 
       <div className="mt-3 flex items-center gap-2">
         <span className="font-mono text-[9px] tabular-nums text-cream/60">{fmt(progress)}</span>
-        <div className="h-[3px] flex-1 overflow-hidden rounded-full bg-cream/25">
-          <div
-            className="h-full rounded-full bg-cream transition-[width] duration-1000 ease-linear"
-            style={{ width: `${pct}%` }}
+        <div className="relative h-4 flex-1">
+          <div className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 overflow-hidden rounded-full bg-cream/25">
+            <div className="h-full rounded-full bg-cream" style={{ width: `${pct}%` }} />
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={Math.max(1, duration)}
+            step={1000}
+            value={Math.min(progress, duration || 0)}
+            onChange={(e) => onSeek?.(Number(e.target.value))}
+            disabled={!duration || !onSeek}
+            aria-label="Seek"
+            className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent opacity-0 disabled:cursor-default"
           />
         </div>
         <span className="font-mono text-[9px] tabular-nums text-cream/60">{fmt(duration)}</span>
       </div>
+
 
       <div className="mt-2 flex items-center gap-3">
         <button
