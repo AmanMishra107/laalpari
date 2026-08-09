@@ -76,7 +76,7 @@ export function Scenery({
 
   return (
     <div
-      className="window-portal absolute right-0 top-[3%] h-[82%] w-[30%] overflow-hidden md:w-[26%]"
+      className="window-portal absolute right-0 top-[2%] h-[84%] w-[34%] overflow-hidden md:w-[22%]"
       aria-hidden
     >
       <div
