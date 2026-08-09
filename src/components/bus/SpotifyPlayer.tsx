@@ -88,7 +88,7 @@ export function SpotifyPlayer({
           >
             <SkipBack className="size-4" />
           </button>
-          <div className="relative size-11">
+          <div className="size-11">
             <button
               onClick={onToggle}
               aria-label={isPlaying ? "Pause" : "Play"}
@@ -96,16 +96,6 @@ export function SpotifyPlayer({
             >
               {isPlaying ? <Pause className="size-5" /> : <Play className="size-5 translate-x-px" />}
             </button>
-            {/* Invisible Spotify embed engine, clipped to the play button so the
-                real click lands inside the iframe (browsers require that gesture
-                to start audio). No Spotify UI is ever visible. */}
-            <div className="absolute inset-0 overflow-hidden rounded-full opacity-[0.001]">
-              <div
-                ref={embedRef}
-                className="absolute h-[80px] w-[320px]"
-                style={{ left: -266, top: -18 }}
-              />
-            </div>
           </div>
 
           <button
@@ -168,10 +158,14 @@ export function SpotifyPlayer({
         </p>
       )}
 
-
-
-
-
+      {/* Keep Spotify's audio engine mounted inside the viewport, but never over
+          an interactive control. Custom player controls drive it through the API. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed bottom-0 right-0 size-px overflow-hidden opacity-0"
+      >
+        <div ref={embedRef} className="h-20 w-80" />
+      </div>
     </section>
   );
 }
