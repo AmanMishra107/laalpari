@@ -45,19 +45,8 @@ export function DecadePlaylist({
           );
         })}
       </ul>
-      {decade.playlistId ? (
-        <div className="mt-2 overflow-hidden rounded-md">
-          <iframe
-            title={`${decade.title} playlist on Spotify`}
-            src={`https://open.spotify.com/embed/playlist/${decade.playlistId}?utm_source=generator&theme=0`}
-            width="100%"
-            height="80"
-            frameBorder="0"
-            loading="lazy"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          />
-        </div>
-      ) : (
+      {decade.playlistId ? null : (
+
         !connected && (
           <a
             href={searchUrl(decade.tracks[0]!.title, decade.tracks[0]!.artist)}
