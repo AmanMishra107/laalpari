@@ -100,8 +100,24 @@ export function useSpotifyEmbed(onEnded?: () => void) {
   }, []);
 
   const toggle = useCallback(() => controllerRef.current?.togglePlay(), []);
-  const seek = useCallback((seconds: number) => controllerRef.current?.seek(seconds), []);
+  const seek = useCallback((seconds: number) => {
+    setPosition(seconds * 1000);
+    controllerRef.current?.seek(seconds);
+  }, []);
 
-  return { hostRef, ready, isPlaying, position, duration, uri, load, toggle, seek };
+  /** The embed iframe exposes volume on newer builds; try every known shape. */
+  const setVolume = useCallback((v: number) => {
+    const c = controllerRef.current as unknown as
+      | { setVolume?: (x: number) => void; iframeElement?: HTMLIFrameElement }
+      | null;
+    if (!c) return false;
+    if (typeof c.setVolume === "function") {
+      c.setVolume(v);
+      return true;
+    }
+    return false;
+  }, []);
+
+  return { hostRef, ready, isPlaying, position, duration, uri, load, toggle, seek, setVolume };
 }
 
