@@ -44,7 +44,6 @@ export const Route = createFileRoute("/")({
 function Index() {
   const j = useJourney();
   const s = useSpotify();
-  const [skip, setSkip] = useState(false);
   const [decadeId, setDecadeId] = useState(stops[0]!.decadeIds[0]!);
   const [clock, setClock] = useState("06:15");
   const decade = useMemo(() => getDecade(decadeId), [decadeId]);
@@ -333,9 +332,7 @@ function Index() {
           <RouteBoard
             index={j.index}
             nextIndex={j.nextIndex}
-            skip={skip}
-            onSkipChange={setSkip}
-            onSelect={(i) => void j.travelTo(i, { skip })}
+            onSelect={(i) => void j.travelTo(i)}
           />
         </footer>
 
