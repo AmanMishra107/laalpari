@@ -73,12 +73,18 @@ function Index() {
   const queueIndexRef = useRef<number | null>(null);
   queueIndexRef.current = queueIndex;
 
-  const { data: queue = [], isSuccess: queueReady } = useQuery({
+  const { data: fetchedQueue = [], isSuccess: queueReady } = useQuery({
     queryKey: ["playlist", decade.playlistId],
     queryFn: () => getPlaylistTracks({ data: { playlistId: decade.playlistId! } }),
     enabled: Boolean(decade.playlistId),
     staleTime: Infinity,
   });
+  // Some eras drop their opening tracks (e.g. the 60s skips the first two).
+  const queue = useMemo(
+    () => fetchedQueue.slice(decade.skipTracks ?? 0),
+    [fetchedQueue, decade.skipTracks],
+  );
+
   const queueRef = useRef(queue);
   queueRef.current = queue;
 
