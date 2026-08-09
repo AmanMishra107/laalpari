@@ -308,10 +308,11 @@ function Index() {
                 ? s.track
                   ? void s.toggle()
                   : void playIndex(0)
-                : embed.uri
+                : started && embed.uri
                   ? embed.toggle()
-                  : void playIndex(0)
+                  : void playIndex(queueIndex ?? 0)
             }
+
             onNext={goNext}
             onPrev={goPrev}
             onSeek={(ms) => (usePremium ? void s.seek?.(ms) : embed.seek(Math.floor(ms / 1000)))}
