@@ -103,7 +103,7 @@ export function SpotifyPlayer({
               <div
                 ref={embedRef}
                 className="absolute h-[80px] w-[320px]"
-                style={{ left: -258, top: -18 }}
+                style={{ left: -266, top: -18 }}
               />
             </div>
           </div>
