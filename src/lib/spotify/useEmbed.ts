@@ -46,6 +46,23 @@ export function useSpotifyEmbed(onEnded?: () => void) {
   const [uri, setUri] = useState<string | null>(null);
   const [preparedUri, setPreparedUri] = useState<string | null>(null);
 
+  // Spotify emits playback_update roughly once a second, which makes a raw
+  // progress bar tick in visible steps. Interpolate between events with rAF so
+  // the bar and the timer glide continuously.
+  const anchorRef = useRef({ position: 0, at: 0, playing: false });
+  useEffect(() => {
+    let frame = 0;
+    const loop = () => {
+      frame = requestAnimationFrame(loop);
+      const a = anchorRef.current;
+      if (!a.playing) return;
+      setPosition(a.position + (performance.now() - a.at));
+    };
+    frame = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+
   useEffect(() => {
     if (typeof window === "undefined" || controllerRef.current) return;
     const host = hostRef.current;
