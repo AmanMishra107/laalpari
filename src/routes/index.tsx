@@ -3,7 +3,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPlaylistTracks, getTrackArtwork } from "@/lib/playlist.functions";
 
-import busVideoAsset from "@/assets/bus-journey-bg.mp4.asset.json";
 import { eraScenes } from "@/data/eraScenes";
 import { getDecade } from "@/data/decades";
 import { stops } from "@/data/journey";
@@ -210,32 +209,18 @@ function Index() {
 
   return (
     <main className="relative h-dvh w-screen overflow-hidden bg-cream">
-      {/* Scene: video on desktop/tablet, era images on mobile */}
+      {/* Scene: one hand-painted era per stop, cross-fading seamlessly */}
       <div className="paper-grain absolute inset-0">
-        {/* Mobile: one hand-painted era per stop, cross-fading seamlessly */}
-        <div className="absolute inset-0 md:hidden">
-          {eraScenes.map((scene, i) => (
-            <img
-              key={scene.url}
-              src={scene.url}
-              alt={scene.alt}
-              loading={i === 0 ? "eager" : "lazy"}
-              className="absolute inset-0 size-full object-cover transition-opacity duration-[1600ms] ease-in-out will-change-[opacity]"
-              style={{ opacity: i === sceneIndex ? 1 : 0 }}
-            />
-          ))}
-        </div>
-
-        {/* Desktop / Tablet: looping journey video */}
-        <video
-          className="absolute inset-0 hidden size-full object-cover md:block"
-          src={busVideoAsset.url}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-        />
+        {eraScenes.map((scene, i) => (
+          <img
+            key={scene.url}
+            src={scene.url}
+            alt={scene.alt}
+            loading={i === 0 ? "eager" : "lazy"}
+            className="absolute inset-0 size-full object-cover transition-opacity duration-[1600ms] ease-in-out will-change-[opacity]"
+            style={{ opacity: i === sceneIndex ? 1 : 0 }}
+          />
+        ))}
 
         {/* era colour wash — the world changes, the bus doesn't */}
         <div
