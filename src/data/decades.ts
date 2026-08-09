@@ -62,6 +62,7 @@ export const decades: Decade[] = [
   },
   {
     id: "80s",
+    playlistId: "37i9dQZF1DX3NU3NvyoJUz",
     label: "80s",
     title: "Chai Stop Classics",
     subtitle: "Cassette rewound with a pencil",
@@ -80,6 +81,7 @@ export const decades: Decade[] = [
   },
   {
     id: "90s",
+    playlistId: "0Gd0yQzB6wttuaLlawHlYI",
     label: "90s",
     title: "Last Seat Legends",
     subtitle: "The window seat anthem era",
@@ -99,6 +101,7 @@ export const decades: Decade[] = [
   },
   {
     id: "00s",
+    playlistId: "6wVv6RynspgsuFVpzUigDu",
     label: "00s",
     title: "College Bus",
     subtitle: "Nokia ringtone nostalgia",
@@ -117,6 +120,7 @@ export const decades: Decade[] = [
   },
   {
     id: "10s",
+    playlistId: "37i9dQZF1DWVDvBpGQbzXj",
     label: "10s",
     title: "Window Seat Diaries",
     subtitle: "Headphones in, world out",
