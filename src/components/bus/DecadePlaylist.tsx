@@ -28,10 +28,9 @@ export function DecadePlaylist({
         {window.map((t, wi) => {
           const i = start + wi;
           const active = activeIndex != null ? activeIndex === i : activeTitle === t.title;
-
-          const active = activeTitle === t.title;
           return (
-            <li key={`${decade.id}-${t.title}`} className={i > 4 ? "hidden sm:block" : ""}>
+            <li key={`${decade.id}-${i}-${t.title}`} className={wi > 4 ? "hidden sm:block" : ""}>
+
               <button
                 onClick={() => onSelect(i)}
                 className="group flex w-full items-baseline gap-2 rounded-sm px-1 py-[3px] text-left transition-colors hover:bg-ink/5"
