@@ -13,18 +13,11 @@ export function SpotifyPlayer({
   isPlaying,
   progress,
   duration,
-  volume,
-  shuffle,
-  repeat,
   onToggle,
   onNext,
   onPrev,
-  onVolume,
   onSeek,
-  volumeEnabled,
 
-  onShuffle,
-  onRepeat,
   message,
   embedRef,
   embedActive,
@@ -36,18 +29,11 @@ export function SpotifyPlayer({
   isPlaying: boolean;
   progress: number;
   duration: number;
-  volume: number;
-  shuffle: boolean;
-  repeat: boolean;
   onToggle: () => void;
   onNext: () => void;
   onPrev: () => void;
-  onVolume: (v: number) => void;
   onSeek?: (ms: number) => void;
-  volumeEnabled?: boolean;
 
-  onShuffle: () => void;
-  onRepeat: () => void;
   message: string | null;
   embedRef?: React.RefObject<HTMLDivElement | null>;
   embedActive?: boolean;
