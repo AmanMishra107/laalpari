@@ -17,7 +17,6 @@ export function SpotifyPlayer({
   onNext,
   onPrev,
   onSeek,
-
   message,
   embedRef,
   embedActive,
@@ -34,7 +33,6 @@ export function SpotifyPlayer({
   onNext: () => void;
   onPrev: () => void;
   onSeek?: (ms: number) => void;
-
   message: string | null;
   embedRef?: React.RefObject<HTMLDivElement | null>;
   embedActive?: boolean;
@@ -46,10 +44,10 @@ export function SpotifyPlayer({
   return (
     <section
       aria-label="Window seat radio player"
-      className="ticket-panel w-[min(420px,92vw)] rounded-xl p-3"
+      className="w-[min(720px,92vw)] rounded-2xl border border-cream/10 bg-black/35 p-4 shadow-2xl backdrop-blur-md"
     >
-      <div className="flex items-center gap-3">
-        <div className="size-12 shrink-0 overflow-hidden rounded-md bg-cream/20">
+      <div className="flex items-center gap-4">
+        <div className="size-14 shrink-0 overflow-hidden rounded-full bg-cream/10 shadow-inner">
           {track?.artwork ? (
             <img
               src={track.artwork}
@@ -66,10 +64,10 @@ export function SpotifyPlayer({
         </div>
 
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[13px] font-medium text-cream">
+          <p className="truncate text-[15px] font-semibold text-cream">
             {track?.name ?? fallbackTitle}
           </p>
-          <p className="truncate font-mono text-[10px] uppercase tracking-[0.18em] text-cream/65">
+          <p className="truncate font-mono text-[11px] uppercase tracking-[0.16em] text-cream/65">
             {track?.artists ?? fallbackArtist}
           </p>
         </div>
@@ -79,37 +77,43 @@ export function SpotifyPlayer({
             onClick={onPrev}
             disabled={disabled}
             aria-label="Previous track"
-            className="grid size-9 place-items-center rounded-full text-cream/70 transition-colors hover:text-cream disabled:cursor-wait disabled:opacity-35"
+            className="grid size-10 place-items-center rounded-full text-cream/80 transition-colors hover:text-cream disabled:cursor-wait disabled:opacity-35"
           >
-            <SkipBack className="size-4" />
+            <SkipBack className="size-5" />
           </button>
-          <div className="size-11">
-            <button
-              onClick={onToggle}
-              disabled={disabled}
-              aria-label={isPlaying ? "Pause" : "Play"}
-              className="grid size-11 place-items-center rounded-full bg-cream text-lalpari transition-transform hover:scale-105 disabled:cursor-wait disabled:opacity-60"
-            >
-              {isPlaying ? <Pause className="size-5" /> : <Play className="size-5 translate-x-px" />}
-            </button>
-          </div>
-
+          <button
+            onClick={onToggle}
+            disabled={disabled}
+            aria-label={isPlaying ? "Pause" : "Play"}
+            className="grid size-12 place-items-center rounded-full bg-cream text-lalpari shadow-lg transition-transform hover:scale-105 disabled:cursor-wait disabled:opacity-60"
+          >
+            {isPlaying ? (
+              <Pause className="size-6" />
+            ) : (
+              <Play className="size-6 translate-x-px" />
+            )}
+          </button>
           <button
             onClick={onNext}
             disabled={disabled}
             aria-label="Next track"
-            className="grid size-9 place-items-center rounded-full text-cream/70 transition-colors hover:text-cream disabled:cursor-wait disabled:opacity-35"
+            className="grid size-10 place-items-center rounded-full text-cream/80 transition-colors hover:text-cream disabled:cursor-wait disabled:opacity-35"
           >
-            <SkipForward className="size-4" />
+            <SkipForward className="size-5" />
           </button>
         </div>
       </div>
 
-      <div className="mt-3 flex items-center gap-2">
-        <span className="font-mono text-[9px] tabular-nums text-cream/60">{fmt(progress)}</span>
-        <div className="relative h-4 flex-1">
-          <div className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 overflow-hidden rounded-full bg-cream/25">
-            <div className="h-full rounded-full bg-cream" style={{ width: `${pct}%` }} />
+      <div className="mt-4 flex items-center gap-3">
+        <span className="font-mono text-[10px] tabular-nums text-cream/60">
+          {fmt(progress)}
+        </span>
+        <div className="relative h-5 flex-1">
+          <div className="absolute inset-x-0 top-1/2 h-[4px] -translate-y-1/2 overflow-hidden rounded-full bg-cream/20">
+            <div
+              className="h-full rounded-full bg-cream"
+              style={{ width: `${pct}%` }}
+            />
           </div>
           <input
             type="range"
@@ -120,21 +124,21 @@ export function SpotifyPlayer({
             onChange={(e) => onSeek?.(Number(e.target.value))}
             disabled={!duration || !onSeek}
             aria-label="Seek"
-            className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent opacity-0 disabled:cursor-default"
+            className="absolute inset-0 h-5 w-full cursor-pointer appearance-none bg-transparent opacity-0 disabled:cursor-default"
           />
         </div>
-        <span className="font-mono text-[9px] tabular-nums text-cream/60">{fmt(duration)}</span>
+        <span className="font-mono text-[10px] tabular-nums text-cream/60">
+          {fmt(duration)}
+        </span>
       </div>
 
-
       {message && (
-        <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.18em] text-cream/80">
+        <p className="mt-2 text-center font-mono text-[10px] uppercase tracking-[0.18em] text-cream/80">
           {message}
         </p>
       )}
 
-      {/* Keep Spotify's audio engine mounted inside the viewport, but never over
-          an interactive control. Custom player controls drive it through the API. */}
+      {/* Keep Spotify's audio engine mounted inside the viewport, but invisible. */}
       <div
         aria-hidden="true"
         className="pointer-events-none fixed bottom-0 right-0 size-px overflow-hidden opacity-0"
