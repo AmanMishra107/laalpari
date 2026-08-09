@@ -89,9 +89,11 @@ function Index() {
     if (!list.length) return false;
     const idx = ((i % list.length) + list.length) % list.length;
     setQueueIndex(idx);
+    setStarted(true);
     embedLoadRef.current?.(list[idx]!.uri);
     return true;
   }, []);
+
 
 
   const embed = useSpotifyEmbed(() => {
@@ -100,11 +102,18 @@ function Index() {
   embedLoadRef.current = embed.load;
   const usePremium = s.connected && s.premium === true;
 
+  // Has the user actually started this era's queue yet? Until then the play
+  // button must kick off a real load (with retries) instead of toggling the
+  // silently preloaded controller.
+  const [started, setStarted] = useState(false);
+
   // Prime the opening track before controls become available, and cache the
   // first two covers so track 1 and the first Next action need no extra fetch.
   useEffect(() => {
     if (usePremium || !embed.ready || !queue[0]) return;
     embed.prepare(queue[0].uri);
+    // Show the real first track in the player, not a hardcoded placeholder.
+    setQueueIndex(0);
     void Promise.all(
       queue.slice(0, 2).map((track) =>
         queryClient.prefetchQuery({
@@ -118,7 +127,9 @@ function Index() {
 
   useEffect(() => {
     setQueueIndex(null);
+    setStarted(false);
   }, [decade.id]);
+
 
   const playIndex = useCallback(
     async (i: number) => {
@@ -297,10 +308,11 @@ function Index() {
                 ? s.track
                   ? void s.toggle()
                   : void playIndex(0)
-                : embed.uri
+                : started && embed.uri
                   ? embed.toggle()
-                  : void playIndex(0)
+                  : void playIndex(queueIndex ?? 0)
             }
+
             onNext={goNext}
             onPrev={goPrev}
             onSeek={(ms) => (usePremium ? void s.seek?.(ms) : embed.seek(Math.floor(ms / 1000)))}
