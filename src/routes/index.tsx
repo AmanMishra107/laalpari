@@ -3,14 +3,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPlaylistTracks, getTrackArtwork } from "@/lib/playlist.functions";
 
-import busScene from "@/assets/bus-scene.jpg";
+import { eraScenes } from "@/data/eraScenes";
 import { getDecade } from "@/data/decades";
 import { stops } from "@/data/journey";
 import { useJourney } from "@/hooks/useJourney";
 import { JourneyIntro } from "@/components/bus/JourneyIntro";
 import { RouteBoard } from "@/components/bus/RouteBoard";
 import { TopBar } from "@/components/bus/TopBar";
-import { Scenery } from "@/components/bus/Scenery";
+
 
 import { ConductorCall } from "@/components/bus/ConductorCall";
 import { FoundMemories } from "@/components/bus/FoundMemories";
