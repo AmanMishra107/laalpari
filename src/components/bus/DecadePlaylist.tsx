@@ -6,19 +6,29 @@ export function DecadePlaylist({
   onSelect,
   activeTitle,
   connected,
+  tracks,
+  activeIndex,
 }: {
   decade: Decade;
   onSelect: (index: number) => void;
   activeTitle: string | null;
   connected: boolean;
+  tracks?: { title: string; artist: string }[];
+  activeIndex?: number | null;
 }) {
+  const list = tracks?.length ? tracks : decade.tracks;
+  const start = Math.max(0, Math.min((activeIndex ?? 0) - 1, list.length - 6));
+  const window = list.slice(start, start + 6);
   return (
     <div key={decade.id} className="animate-in fade-in duration-500">
       <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-ink/50">
         {decade.title} — {decade.subtitle}
       </p>
       <ul className="mt-2 space-y-0.5">
-        {decade.tracks.slice(0, 7).map((t, i) => {
+        {window.map((t, wi) => {
+          const i = start + wi;
+          const active = activeIndex != null ? activeIndex === i : activeTitle === t.title;
+
           const active = activeTitle === t.title;
           return (
             <li key={`${decade.id}-${t.title}`} className={i > 4 ? "hidden sm:block" : ""}>
