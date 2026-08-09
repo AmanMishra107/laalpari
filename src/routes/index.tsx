@@ -157,6 +157,13 @@ function Index() {
 
   const first = decade.tracks[0]!;
   const current = queueIndex != null ? (queue[queueIndex] ?? null) : null;
+  const { data: artwork = null } = useQuery({
+    queryKey: ["artwork", current?.uri],
+    queryFn: () => getTrackArtwork({ data: { uri: current!.uri } }),
+    enabled: Boolean(current?.uri),
+    staleTime: Infinity,
+  });
+
 
   const isPlaying = s.status === "playing";
   const arrived = j.index === stops.length - 1 && !j.moving;
