@@ -151,7 +151,14 @@ export function SpotifyPlayer({
         >
           <Repeat className="size-3.5" />
         </button>
-        <Volume2 className="size-3.5 text-cream/45" aria-hidden />
+        <button
+          onClick={() => onVolume(volume > 0 ? 0 : 0.7)}
+          aria-label={volume > 0 ? "Mute" : "Unmute"}
+          disabled={volumeEnabled === false}
+          className="text-cream/45 transition-colors hover:text-cream/80 disabled:opacity-40"
+        >
+          {volume > 0 ? <Volume2 className="size-3.5" /> : <VolumeX className="size-3.5" />}
+        </button>
         <input
           type="range"
           min={0}
@@ -159,9 +166,16 @@ export function SpotifyPlayer({
           step={0.05}
           value={volume}
           onChange={(e) => onVolume(Number(e.target.value))}
+          disabled={volumeEnabled === false}
+          title={
+            volumeEnabled === false
+              ? "Volume is controlled by Spotify — connect Premium for in-app volume"
+              : "Volume"
+          }
           aria-label="Volume"
-          className="h-[3px] w-20 accent-cream"
+          className="h-[3px] w-20 accent-cream disabled:opacity-40"
         />
+
         <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.2em] text-cream/55">
           {isPlaying ? "On air" : "Paused at the window"}
         </span>
