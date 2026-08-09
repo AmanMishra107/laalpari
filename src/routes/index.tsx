@@ -156,6 +156,8 @@ function Index() {
 
 
   const first = decade.tracks[0]!;
+  const current = queueIndex != null ? (queue[queueIndex] ?? null) : null;
+
   const isPlaying = s.status === "playing";
   const arrived = j.index === stops.length - 1 && !j.moving;
 
