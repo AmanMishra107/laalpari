@@ -154,6 +154,15 @@ export function SpotifyPlayer({
           {message}
         </p>
       )}
+
+      {/* Spotify embed engine — plays without Premium */}
+      <div
+        ref={embedRef}
+        className={`overflow-hidden rounded-md transition-all ${
+          embedActive && embedLoaded ? "mt-2 h-[80px] opacity-100" : "h-0 opacity-0"
+        }`}
+        aria-hidden={!embedActive || !embedLoaded}
+      />
     </section>
   );
 }
