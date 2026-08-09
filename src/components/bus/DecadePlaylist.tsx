@@ -6,22 +6,31 @@ export function DecadePlaylist({
   onSelect,
   activeTitle,
   connected,
+  tracks,
+  activeIndex,
 }: {
   decade: Decade;
   onSelect: (index: number) => void;
   activeTitle: string | null;
   connected: boolean;
+  tracks?: { title: string; artist: string }[];
+  activeIndex?: number | null;
 }) {
+  const list = tracks?.length ? tracks : decade.tracks;
+  const start = Math.max(0, Math.min((activeIndex ?? 0) - 1, list.length - 6));
+  const window = list.slice(start, start + 6);
   return (
     <div key={decade.id} className="animate-in fade-in duration-500">
       <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-ink/50">
         {decade.title} — {decade.subtitle}
       </p>
       <ul className="mt-2 space-y-0.5">
-        {decade.tracks.slice(0, 7).map((t, i) => {
-          const active = activeTitle === t.title;
+        {window.map((t, wi) => {
+          const i = start + wi;
+          const active = activeIndex != null ? activeIndex === i : activeTitle === t.title;
           return (
-            <li key={`${decade.id}-${t.title}`} className={i > 4 ? "hidden sm:block" : ""}>
+            <li key={`${decade.id}-${i}-${t.title}`} className={wi > 4 ? "hidden sm:block" : ""}>
+
               <button
                 onClick={() => onSelect(i)}
                 className="group flex w-full items-baseline gap-2 rounded-sm px-1 py-[3px] text-left transition-colors hover:bg-ink/5"
@@ -45,19 +54,8 @@ export function DecadePlaylist({
           );
         })}
       </ul>
-      {decade.playlistId ? (
-        <div className="mt-2 overflow-hidden rounded-md">
-          <iframe
-            title={`${decade.title} playlist on Spotify`}
-            src={`https://open.spotify.com/embed/playlist/${decade.playlistId}?utm_source=generator&theme=0`}
-            width="100%"
-            height="80"
-            frameBorder="0"
-            loading="lazy"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          />
-        </div>
-      ) : (
+      {decade.playlistId ? null : (
+
         !connected && (
           <a
             href={searchUrl(decade.tracks[0]!.title, decade.tracks[0]!.artist)}

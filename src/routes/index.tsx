@@ -1,5 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getPlaylistTracks } from "@/lib/playlist.functions";
+
 import busScene from "@/assets/bus-scene.jpg";
 import { getDecade } from "@/data/decades";
 import { stops } from "@/data/journey";
@@ -66,21 +69,51 @@ function Index() {
     return () => clearInterval(t);
   }, []);
 
-  const embed = useSpotifyEmbed();
+  const [queueIndex, setQueueIndex] = useState<number | null>(null);
+  const queueIndexRef = useRef<number | null>(null);
+  queueIndexRef.current = queueIndex;
+
+  const { data: queue = [] } = useQuery({
+    queryKey: ["playlist", decade.playlistId],
+    queryFn: () => getPlaylistTracks({ data: { playlistId: decade.playlistId! } }),
+    enabled: Boolean(decade.playlistId),
+    staleTime: Infinity,
+  });
+  const queueRef = useRef(queue);
+  queueRef.current = queue;
+
+  const embedLoadRef = useRef<((uri: string) => void) | null>(null);
+
+  const playQueueIndex = useCallback((i: number) => {
+    const list = queueRef.current;
+    if (!list.length) return false;
+    const idx = ((i % list.length) + list.length) % list.length;
+    setQueueIndex(idx);
+    embedLoadRef.current?.(list[idx]!.uri);
+    return true;
+  }, []);
+
+
+  const embed = useSpotifyEmbed(() => {
+    if (queueIndexRef.current != null) playQueueIndex(queueIndexRef.current + 1);
+  });
+  embedLoadRef.current = embed.load;
   const usePremium = s.connected && s.premium === true;
+
+  useEffect(() => {
+    setQueueIndex(null);
+  }, [decade.id]);
 
   const playIndex = useCallback(
     async (i: number) => {
-      const t = decade.tracks[i];
-      if (!t) return;
-
-      // No Premium session needed: the Spotify embed plays the era playlist.
+      // No Premium session needed: the Spotify embed plays the era playlist track-by-track.
       if (!usePremium) {
-        if (decade.playlistId) {
-          embed.load(`spotify:playlist:${decade.playlistId}`);
+        if (playQueueIndex(i)) {
           s.setMessage(null);
           return;
         }
+        const t = decade.tracks[i];
+        if (!t) return;
         const found = await s.resolve(t.title, t.artist).catch(() => null);
         if (found) {
           embed.load(found.uri);
@@ -93,9 +126,12 @@ function Index() {
 
       try {
         if (decade.playlistId) {
+          setQueueIndex(i);
           await s.playPlaylist(decade.playlistId, i);
           return;
         }
+        const t = decade.tracks[i];
+        if (!t) return;
         const found = await s.resolve(t.title, t.artist);
         if (found) await s.play(found.uri);
         else s.setMessage("RADIO SIGNAL LOST");
@@ -103,12 +139,25 @@ function Index() {
         s.setMessage("RADIO SIGNAL LOST");
       }
     },
-    [decade, s, embed, usePremium],
+    [decade, s, embed, usePremium, playQueueIndex],
   );
+
+  const goNext = useCallback(() => {
+    if (usePremium) return void s.next();
+    playQueueIndex((queueIndexRef.current ?? -1) + 1);
+  }, [usePremium, s, playQueueIndex]);
+
+  const goPrev = useCallback(() => {
+    if (usePremium) return void s.previous();
+    playQueueIndex((queueIndexRef.current ?? 1) - 1);
+  }, [usePremium, s, playQueueIndex]);
+
 
 
 
   const first = decade.tracks[0]!;
+  const current = queueIndex != null ? (queue[queueIndex] ?? null) : null;
+
   const isPlaying = s.status === "playing";
   const arrived = j.index === stops.length - 1 && !j.moving;
 
@@ -235,10 +284,13 @@ function Index() {
             <div className="max-w-[19rem] rounded-lg bg-cream/70 p-3 backdrop-blur-[2px]">
               <DecadePlaylist
                 decade={decade}
+                tracks={queue}
+                activeIndex={queueIndex}
                 onSelect={(i) => void playIndex(i)}
                 activeTitle={s.track?.name ?? null}
                 connected={s.connected}
               />
+
               {j.stop.decadeIds.length > 1 && (
                 <div className="mt-2 flex gap-1">
                   {j.stop.decadeIds.map((d) => (
@@ -285,7 +337,7 @@ function Index() {
               </a>
             )}
             <SpotifyPlayer
-              track={s.track}
+              track={usePremium ? s.track : current ? { name: current.title, artists: current.artist, artwork: null } as never : s.track}
               fallbackTitle={first.title}
               fallbackArtist={first.artist}
               isPlaying={usePremium ? isPlaying : embed.isPlaying}
@@ -306,8 +358,9 @@ function Index() {
                     ? embed.toggle()
                     : void playIndex(0)
               }
-              onNext={s.next}
-              onPrev={s.previous}
+              onNext={goNext}
+              onPrev={goPrev}
+
               onVolume={s.setVolume}
               onShuffle={() => s.setShuffle(!s.shuffle)}
               onRepeat={() => s.setRepeat(!s.repeat)}

@@ -155,14 +155,14 @@ export function SpotifyPlayer({
         </p>
       )}
 
-      {/* Spotify embed engine — plays without Premium */}
+      {/* Hidden Spotify embed engine — audio only, no second player UI */}
       <div
         ref={embedRef}
-        className={`overflow-hidden rounded-md transition-all ${
-          embedActive && embedLoaded ? "mt-2 h-[80px] opacity-100" : "h-0 opacity-0"
-        }`}
-        aria-hidden={!embedActive || !embedLoaded}
+        aria-hidden
+        className="pointer-events-none absolute size-px overflow-hidden opacity-0"
+        style={{ left: -9999, top: 0 }}
       />
+
     </section>
   );
 }
