@@ -210,18 +210,32 @@ function Index() {
 
   return (
     <main className="relative h-dvh w-screen overflow-hidden bg-cream">
-      {/* Scene: one hand-painted era per stop, cross-fading seamlessly */}
+      {/* Scene: video on desktop/tablet, era images on mobile */}
       <div className="paper-grain absolute inset-0">
-        {eraScenes.map((scene, i) => (
-          <img
-            key={scene.url}
-            src={scene.url}
-            alt={scene.alt}
-            loading={i === 0 ? "eager" : "lazy"}
-            className="absolute inset-0 size-full object-cover transition-opacity duration-[1600ms] ease-in-out will-change-[opacity]"
-            style={{ opacity: i === sceneIndex ? 1 : 0 }}
-          />
-        ))}
+        {/* Mobile: one hand-painted era per stop, cross-fading seamlessly */}
+        <div className="absolute inset-0 md:hidden">
+          {eraScenes.map((scene, i) => (
+            <img
+              key={scene.url}
+              src={scene.url}
+              alt={scene.alt}
+              loading={i === 0 ? "eager" : "lazy"}
+              className="absolute inset-0 size-full object-cover transition-opacity duration-[1600ms] ease-in-out will-change-[opacity]"
+              style={{ opacity: i === sceneIndex ? 1 : 0 }}
+            />
+          ))}
+        </div>
+
+        {/* Desktop / Tablet: looping journey video */}
+        <video
+          className="absolute inset-0 hidden size-full object-cover md:block"
+          src={busVideoAsset.url}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+        />
 
         {/* era colour wash — the world changes, the bus doesn't */}
         <div
