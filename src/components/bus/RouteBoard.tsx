@@ -4,14 +4,10 @@ import { stops } from "@/data/journey";
 export function RouteBoard({
   index,
   nextIndex,
-  skip,
-  onSkipChange,
   onSelect,
 }: {
   index: number;
   nextIndex: number | null;
-  skip: boolean;
-  onSkipChange: (v: boolean) => void;
   onSelect: (i: number) => void;
 }) {
   const progress = (nextIndex ?? index) / (stops.length - 1);
