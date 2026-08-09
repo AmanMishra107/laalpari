@@ -165,11 +165,20 @@ export function useSpotifyEmbed(onEnded?: () => void) {
 
   const prepare = useCallback((nextUri: string) => load(nextUri, false), [load]);
   const toggle = useCallback(() => {
-    shouldPlayRef.current = !isPlaying;
+    const next = !isPlaying;
+    shouldPlayRef.current = next;
+    // Optimistic flip so the button never feels delayed.
+    setIsPlaying(next);
+    anchorRef.current = { ...anchorRef.current, position, at: performance.now(), playing: next };
     controllerRef.current?.togglePlay();
-  }, [isPlaying]);
+  }, [isPlaying, position]);
   const seek = useCallback((seconds: number) => {
     setPosition(seconds * 1000);
+    anchorRef.current = {
+      position: seconds * 1000,
+      at: performance.now(),
+      playing: anchorRef.current.playing,
+    };
     controllerRef.current?.seek(seconds);
   }, []);
 
