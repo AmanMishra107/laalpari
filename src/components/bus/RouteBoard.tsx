@@ -17,20 +17,11 @@ export function RouteBoard({
   const progress = (nextIndex ?? index) / (stops.length - 1);
 
   return (
-    <div className="glass-panel flex w-full flex-col gap-2 rounded-2xl px-4 py-3">
-      <div className="flex items-center justify-between gap-2">
+    <div className="flex w-full flex-col gap-2 border-t border-ink/10 bg-cream/30 px-4 py-3">
+      <div className="flex items-center justify-center gap-2">
         <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-ink/50">
           गाण्यांचा प्रवास · Radio Years
         </span>
-        <button
-          onClick={() => onSkipChange(!skip)}
-          aria-pressed={skip}
-          className={`font-mono text-[8px] uppercase tracking-[0.24em] underline-offset-4 hover:underline ${
-            skip ? "text-ink" : "text-ink/35"
-          }`}
-        >
-          skip to stop
-        </button>
       </div>
 
       <div className="relative flex items-start pt-5">
