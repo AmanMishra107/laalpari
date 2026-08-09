@@ -44,7 +44,6 @@ export const Route = createFileRoute("/")({
 function Index() {
   const j = useJourney();
   const s = useSpotify();
-  const [skip, setSkip] = useState(false);
   const [decadeId, setDecadeId] = useState(stops[0]!.decadeIds[0]!);
   const [clock, setClock] = useState("06:15");
   const decade = useMemo(() => getDecade(decadeId), [decadeId]);
