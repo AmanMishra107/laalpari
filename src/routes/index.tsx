@@ -288,13 +288,24 @@ function Index() {
               track={s.track}
               fallbackTitle={first.title}
               fallbackArtist={first.artist}
-              isPlaying={isPlaying}
-              progress={s.progress}
-              duration={s.duration || 0}
+              isPlaying={usePremium ? isPlaying : embed.isPlaying}
+              progress={usePremium ? s.progress : embed.position}
+              duration={usePremium ? s.duration || 0 : embed.duration}
               volume={s.volume}
               shuffle={s.shuffle}
               repeat={s.repeat}
-              onToggle={() => (s.track ? void s.toggle() : void playIndex(0))}
+              embedRef={embed.hostRef}
+              embedActive={!usePremium}
+              embedLoaded={Boolean(embed.uri)}
+              onToggle={() =>
+                usePremium
+                  ? s.track
+                    ? void s.toggle()
+                    : void playIndex(0)
+                  : embed.uri
+                    ? embed.toggle()
+                    : void playIndex(0)
+              }
               onNext={s.next}
               onPrev={s.previous}
               onVolume={s.setVolume}
