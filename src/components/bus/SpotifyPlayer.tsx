@@ -42,6 +42,8 @@ export function SpotifyPlayer({
   onNext: () => void;
   onPrev: () => void;
   onVolume: (v: number) => void;
+  onSeek?: (ms: number) => void;
+
   onShuffle: () => void;
   onRepeat: () => void;
   message: string | null;
