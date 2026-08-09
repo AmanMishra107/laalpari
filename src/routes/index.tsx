@@ -11,7 +11,7 @@ import { JourneyIntro } from "@/components/bus/JourneyIntro";
 import { RouteBoard } from "@/components/bus/RouteBoard";
 import { Scenery } from "@/components/bus/Scenery";
 import { StopChapter } from "@/components/bus/StopChapter";
-import { Ticket } from "@/components/bus/Ticket";
+
 import { ConductorCall } from "@/components/bus/ConductorCall";
 import { FoundMemories } from "@/components/bus/FoundMemories";
 import { DecadePlaylist } from "@/components/bus/DecadePlaylist";
