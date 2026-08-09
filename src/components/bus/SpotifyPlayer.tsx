@@ -1,10 +1,12 @@
 import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import type { SpotifyTrack } from "@/lib/spotify/api";
 
 const fmt = (ms: number) => {
-  const s = Math.floor(ms / 1000);
+  const s = Math.max(0, Math.floor(ms / 1000));
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 };
+
 
 export function SpotifyPlayer({
   track,
