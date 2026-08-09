@@ -62,14 +62,14 @@ export function RouteBoard({
                 } ${target ? "on-air-dot border-ink" : ""}`}
               />
               <span
-                className={`font-mono text-[8px] uppercase tracking-[0.16em] transition-colors sm:text-[9px] ${
+                className={`w-full truncate px-0.5 text-center font-mono text-[7px] uppercase leading-tight tracking-[0.08em] transition-colors sm:text-[9px] sm:tracking-[0.16em] ${
                   active ? "text-ink" : done ? "text-ink/55" : "text-ink/35"
                 } group-hover:text-ink`}
               >
                 {s.name}
               </span>
               <span
-                className={`font-mono text-[8px] tracking-[0.14em] ${
+                className={`hidden font-mono text-[8px] tracking-[0.14em] sm:block ${
                   active ? "text-ink/70" : "text-ink/30"
                 }`}
               >
