@@ -46,70 +46,46 @@ export function SpotifyPlayer({
   return (
     <section
       aria-label="Window seat radio player"
-      className="glass-panel w-full rounded-2xl p-3.5"
+      className="player-glass flex w-full items-center gap-4 rounded-full py-2.5 pl-2.5 pr-6"
     >
-      <div className="flex items-center gap-3">
-        <div className="size-12 shrink-0 overflow-hidden rounded-xl bg-ink/10">
+      {/* vinyl disc */}
+      <div className="relative size-[68px] shrink-0">
+        <div
+          className={`size-full overflow-hidden rounded-full border border-white/15 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.8)] ${
+            isPlaying ? "animate-[spin_9s_linear_infinite]" : ""
+          }`}
+        >
           {track?.artwork ? (
             <img
               src={track.artwork}
               alt={`Album artwork for ${track.name}`}
-              width={96}
-              height={96}
+              width={136}
+              height={136}
               className="size-full object-cover"
             />
           ) : (
-            <div className="grid size-full place-items-center font-mono text-[8px] uppercase tracking-widest text-ink/50">
+            <div className="grid size-full place-items-center bg-black/40 font-mono text-[9px] uppercase tracking-widest text-white/60">
               ST
             </div>
           )}
         </div>
-
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-[13px] font-medium text-ink">
-            {track?.name ?? fallbackTitle}
-          </p>
-          <p className="truncate font-mono text-[10px] uppercase tracking-[0.18em] text-ink/60">
-            {track?.artists ?? fallbackArtist}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-1">
-          <button
-            onClick={onPrev}
-            disabled={disabled}
-            aria-label="Previous track"
-            className="grid size-9 place-items-center rounded-full text-ink/60 transition-colors hover:text-ink disabled:cursor-wait disabled:opacity-35"
-          >
-            <SkipBack className="size-4" />
-          </button>
-          <div className="size-11">
-            <button
-              onClick={onToggle}
-              disabled={disabled}
-              aria-label={isPlaying ? "Pause" : "Play"}
-              className="grid size-11 place-items-center rounded-full border border-ink/15 bg-cream/70 text-ink backdrop-blur-md transition-transform hover:scale-105 disabled:cursor-wait disabled:opacity-60"
-            >
-              {isPlaying ? <Pause className="size-5" /> : <Play className="size-5 translate-x-px" />}
-            </button>
-          </div>
-
-          <button
-            onClick={onNext}
-            disabled={disabled}
-            aria-label="Next track"
-            className="grid size-9 place-items-center rounded-full text-ink/60 transition-colors hover:text-ink disabled:cursor-wait disabled:opacity-35"
-          >
-            <SkipForward className="size-4" />
-          </button>
-        </div>
+        <span
+          aria-hidden
+          className="absolute left-1/2 top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/25 bg-black/70"
+        />
       </div>
 
-      <div className="mt-3 flex items-center gap-2">
-        <span className="font-mono text-[9px] tabular-nums text-ink/55">{fmt(progress)}</span>
-        <div className="relative h-4 flex-1">
-          <div className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 overflow-hidden rounded-full bg-ink/20">
-            <div className="h-full rounded-full bg-ink/70" style={{ width: `${pct}%` }} />
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-[15px] font-semibold leading-tight text-white">
+          {track?.name ?? fallbackTitle}
+        </p>
+        <p className="mt-0.5 truncate text-[12px] leading-tight text-white/60">
+          {track?.artists ?? fallbackArtist}
+        </p>
+
+        <div className="relative mt-2.5 h-3">
+          <div className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 overflow-hidden rounded-full bg-white/25">
+            <div className="h-full rounded-full bg-white/90" style={{ width: `${pct}%` }} />
           </div>
           <input
             type="range"
@@ -120,17 +96,48 @@ export function SpotifyPlayer({
             onChange={(e) => onSeek?.(Number(e.target.value))}
             disabled={!duration || !onSeek}
             aria-label="Seek"
-            className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent opacity-0 disabled:cursor-default"
+            className="absolute inset-0 h-3 w-full cursor-pointer appearance-none bg-transparent opacity-0 disabled:cursor-default"
           />
         </div>
-        <span className="font-mono text-[9px] tabular-nums text-ink/55">{fmt(duration)}</span>
+
+        <p className="mt-1 font-mono text-[10px] tabular-nums text-white/55">
+          {fmt(progress)} / {fmt(duration)}
+          {message && <span className="ml-2 uppercase tracking-[0.16em]">{message}</span>}
+        </p>
       </div>
 
-      {message && (
-        <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.18em] text-ink/60">
-          {message}
-        </p>
-      )}
+      <div className="flex shrink-0 items-center gap-3">
+        <button
+          onClick={onPrev}
+          disabled={disabled}
+          aria-label="Previous track"
+          className="grid size-7 place-items-center rounded-full text-white/75 transition-colors hover:text-white disabled:cursor-wait disabled:opacity-35"
+        >
+          <SkipBack className="size-4 fill-current" />
+        </button>
+
+        <button
+          onClick={onToggle}
+          disabled={disabled}
+          aria-label={isPlaying ? "Pause" : "Play"}
+          className="grid size-11 place-items-center rounded-full bg-white text-black shadow-[0_6px_18px_-8px_rgba(0,0,0,0.9)] transition-transform hover:scale-105 disabled:cursor-wait disabled:opacity-60"
+        >
+          {isPlaying ? (
+            <Pause className="size-4 fill-current" />
+          ) : (
+            <Play className="size-4 translate-x-px fill-current" />
+          )}
+        </button>
+
+        <button
+          onClick={onNext}
+          disabled={disabled}
+          aria-label="Next track"
+          className="grid size-7 place-items-center rounded-full text-white/75 transition-colors hover:text-white disabled:cursor-wait disabled:opacity-35"
+        >
+          <SkipForward className="size-4 fill-current" />
+        </button>
+      </div>
 
       {/* Keep Spotify's audio engine mounted inside the viewport, but never over
           an interactive control. Custom player controls drive it through the API. */}
