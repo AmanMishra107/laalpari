@@ -43,7 +43,17 @@ export function SpotifyPlayer({
   embedLoaded?: boolean;
   disabled?: boolean;
 }) {
-  const pct = duration ? Math.min(100, (progress / duration) * 100) : 0;
+  // Local scrub state so dragging the seek bar feels instant and never fights
+  // the incoming playback updates.
+  const [scrub, setScrub] = useState<number | null>(null);
+  const scrubTimer = useRef<number | null>(null);
+  useEffect(() => () => {
+    if (scrubTimer.current) window.clearTimeout(scrubTimer.current);
+  }, []);
+
+  const shown = scrub ?? progress;
+  const pct = duration ? Math.min(100, Math.max(0, (shown / duration) * 100)) : 0;
+  const loading = !duration;
 
   return (
     <section
@@ -53,10 +63,10 @@ export function SpotifyPlayer({
       {/* vinyl disc */}
       <div className="relative size-[68px] shrink-0">
         <div
-          className={`size-full overflow-hidden rounded-full border border-white/15 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.8)] ${
-            isPlaying ? "animate-[spin_9s_linear_infinite]" : ""
-          }`}
+          className="size-full overflow-hidden rounded-full border border-white/15 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.8)] animate-[spin_9s_linear_infinite]"
+          style={{ animationPlayState: isPlaying ? "running" : "paused" }}
         >
+
           {track?.artwork ? (
             <img
               src={track.artwork}
