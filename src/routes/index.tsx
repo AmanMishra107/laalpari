@@ -241,13 +241,13 @@ function Index() {
 
       {/* Poster UI */}
       <div
-        className="relative z-30 grid h-dvh grid-rows-[auto_1fr_auto] px-3 pb-3 sm:px-8 sm:pb-6"
+        className="relative z-30 grid h-dvh grid-rows-[auto_1fr_auto] px-5 pb-4 sm:px-8 sm:pb-6"
         style={{
           paddingTop: "max(0.5rem, env(safe-area-inset-top))",
-          paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))",
+          paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
         }}
       >
-        <header className="-mx-3 -mt-2 sm:-mx-8">
+        <header className="-mx-5 -mt-2 sm:-mx-8">
           <TopBar
             clock={clock}
             connected={s.connected}
@@ -258,7 +258,7 @@ function Index() {
 
         {/* Middle */}
         <div className="relative flex items-center justify-end">
-          <div className="w-full max-w-[15.5rem] rounded-lg bg-cream/70 p-2.5 backdrop-blur-[2px] sm:max-w-[19rem] sm:p-3">
+          <div className="max-w-[19rem] rounded-lg bg-cream/70 p-3 backdrop-blur-[2px]">
             <DecadePlaylist
               decade={decade}
               tracks={queue}

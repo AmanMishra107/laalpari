@@ -58,10 +58,10 @@ export function SpotifyPlayer({
   return (
     <section
       aria-label="Window seat radio player"
-      className="player-glass grid w-full grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 gap-y-2 rounded-3xl p-3 sm:flex sm:items-center sm:gap-4 sm:rounded-full sm:py-2.5 sm:pl-2.5 sm:pr-6"
+      className="player-glass flex w-full items-center gap-4 rounded-full py-2.5 pl-2.5 pr-6"
     >
       {/* vinyl disc */}
-      <div className="relative size-14 shrink-0 sm:size-[68px]">
+      <div className="relative size-[68px] shrink-0">
         <div
           className="size-full overflow-hidden rounded-full border border-white/15 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.8)] animate-[spin_9s_linear_infinite]"
           style={{ animationPlayState: isPlaying ? "running" : "paused" }}
@@ -142,7 +142,7 @@ export function SpotifyPlayer({
         </p>
       </div>
 
-      <div className="col-span-2 flex shrink-0 items-center justify-center gap-5 sm:col-span-1 sm:justify-end sm:gap-3">
+      <div className="flex shrink-0 items-center gap-3">
         <button
           onClick={onPrev}
           disabled={disabled}
