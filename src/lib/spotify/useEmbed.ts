@@ -46,6 +46,23 @@ export function useSpotifyEmbed(onEnded?: () => void) {
   const [uri, setUri] = useState<string | null>(null);
   const [preparedUri, setPreparedUri] = useState<string | null>(null);
 
+  // Spotify emits playback_update roughly once a second, which makes a raw
+  // progress bar tick in visible steps. Interpolate between events with rAF so
+  // the bar and the timer glide continuously.
+  const anchorRef = useRef({ position: 0, at: 0, playing: false });
+  useEffect(() => {
+    let frame = 0;
+    const loop = () => {
+      frame = requestAnimationFrame(loop);
+      const a = anchorRef.current;
+      if (!a.playing) return;
+      setPosition(a.position + (performance.now() - a.at));
+    };
+    frame = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+
   useEffect(() => {
     if (typeof window === "undefined" || controllerRef.current) return;
     const host = hostRef.current;
@@ -69,6 +86,11 @@ export function useSpotifyEmbed(onEnded?: () => void) {
               retryRef.current = [];
             }
             setIsPlaying(!e.data.isPaused);
+            anchorRef.current = {
+              position: e.data.position,
+              at: performance.now(),
+              playing: !e.data.isPaused,
+            };
             setPosition(e.data.position);
             setDuration(e.data.duration);
             const d = e.data.duration;
@@ -111,6 +133,11 @@ export function useSpotifyEmbed(onEnded?: () => void) {
     setUri(nextUri);
     setPreparedUri(null);
     setPosition(0);
+    setDuration(0);
+    // Optimistic: the UI flips to the new track instantly instead of waiting
+    // for Spotify's first playback_update.
+    setIsPlaying(autoplay);
+    anchorRef.current = { position: 0, at: performance.now(), playing: false };
     if (prepareTimerRef.current !== null) window.clearTimeout(prepareTimerRef.current);
     retryRef.current.forEach((t) => window.clearTimeout(t));
     retryRef.current = [];
@@ -138,11 +165,20 @@ export function useSpotifyEmbed(onEnded?: () => void) {
 
   const prepare = useCallback((nextUri: string) => load(nextUri, false), [load]);
   const toggle = useCallback(() => {
-    shouldPlayRef.current = !isPlaying;
+    const next = !isPlaying;
+    shouldPlayRef.current = next;
+    // Optimistic flip so the button never feels delayed.
+    setIsPlaying(next);
+    anchorRef.current = { ...anchorRef.current, position, at: performance.now(), playing: next };
     controllerRef.current?.togglePlay();
-  }, [isPlaying]);
+  }, [isPlaying, position]);
   const seek = useCallback((seconds: number) => {
     setPosition(seconds * 1000);
+    anchorRef.current = {
+      position: seconds * 1000,
+      at: performance.now(),
+      playing: anchorRef.current.playing,
+    };
     controllerRef.current?.seek(seconds);
   }, []);
 
