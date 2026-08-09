@@ -246,21 +246,20 @@ function Index() {
 
       {/* Poster UI */}
       <div
-        className="relative z-30 grid h-dvh grid-rows-[auto_1fr_auto] px-5 py-4 sm:px-8 sm:py-6"
+        className="relative z-30 grid h-dvh grid-rows-[auto_1fr_auto] px-5 pb-4 sm:px-8 sm:pb-6"
         style={{
-          paddingTop: "max(1rem, env(safe-area-inset-top))",
+          paddingTop: "max(0.5rem, env(safe-area-inset-top))",
           paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
         }}
       >
-        <header className="flex items-start justify-end gap-4">
-          <button
-            onClick={s.connected ? s.disconnect : s.connect}
-            className="flex items-center gap-1.5 rounded-full border border-ink/10 bg-cream/60 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-ink backdrop-blur-md"
-          >
-            {s.connected && <span className="size-1.5 rounded-full bg-spotify" aria-hidden />}
-            {s.connected ? "Connected" : "Connect Spotify"}
-          </button>
+        <header className="-mx-5 -mt-2 sm:-mx-8">
+          <TopBar
+            clock={clock}
+            connected={s.connected}
+            onConnect={s.connected ? s.disconnect : s.connect}
+          />
         </header>
+
 
         {/* Middle */}
         <div className="relative flex items-center justify-end">
