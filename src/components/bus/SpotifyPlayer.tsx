@@ -46,10 +46,10 @@ export function SpotifyPlayer({
   return (
     <section
       aria-label="Window seat radio player"
-      className="ticket-panel w-[min(420px,92vw)] rounded-xl p-3"
+      className="glass-panel w-full rounded-2xl p-3.5"
     >
       <div className="flex items-center gap-3">
-        <div className="size-12 shrink-0 overflow-hidden rounded-md bg-cream/20">
+        <div className="size-12 shrink-0 overflow-hidden rounded-xl bg-ink/10">
           {track?.artwork ? (
             <img
               src={track.artwork}
@@ -59,17 +59,17 @@ export function SpotifyPlayer({
               className="size-full object-cover"
             />
           ) : (
-            <div className="grid size-full place-items-center font-mono text-[8px] uppercase tracking-widest text-cream/60">
+            <div className="grid size-full place-items-center font-mono text-[8px] uppercase tracking-widest text-ink/50">
               ST
             </div>
           )}
         </div>
 
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[13px] font-medium text-cream">
+          <p className="truncate text-[13px] font-medium text-ink">
             {track?.name ?? fallbackTitle}
           </p>
-          <p className="truncate font-mono text-[10px] uppercase tracking-[0.18em] text-cream/65">
+          <p className="truncate font-mono text-[10px] uppercase tracking-[0.18em] text-ink/60">
             {track?.artists ?? fallbackArtist}
           </p>
         </div>
@@ -79,7 +79,7 @@ export function SpotifyPlayer({
             onClick={onPrev}
             disabled={disabled}
             aria-label="Previous track"
-            className="grid size-9 place-items-center rounded-full text-cream/70 transition-colors hover:text-cream disabled:cursor-wait disabled:opacity-35"
+            className="grid size-9 place-items-center rounded-full text-ink/60 transition-colors hover:text-ink disabled:cursor-wait disabled:opacity-35"
           >
             <SkipBack className="size-4" />
           </button>
@@ -88,7 +88,7 @@ export function SpotifyPlayer({
               onClick={onToggle}
               disabled={disabled}
               aria-label={isPlaying ? "Pause" : "Play"}
-              className="grid size-11 place-items-center rounded-full bg-cream text-lalpari transition-transform hover:scale-105 disabled:cursor-wait disabled:opacity-60"
+              className="grid size-11 place-items-center rounded-full border border-ink/15 bg-cream/70 text-ink backdrop-blur-md transition-transform hover:scale-105 disabled:cursor-wait disabled:opacity-60"
             >
               {isPlaying ? <Pause className="size-5" /> : <Play className="size-5 translate-x-px" />}
             </button>
@@ -98,7 +98,7 @@ export function SpotifyPlayer({
             onClick={onNext}
             disabled={disabled}
             aria-label="Next track"
-            className="grid size-9 place-items-center rounded-full text-cream/70 transition-colors hover:text-cream disabled:cursor-wait disabled:opacity-35"
+            className="grid size-9 place-items-center rounded-full text-ink/60 transition-colors hover:text-ink disabled:cursor-wait disabled:opacity-35"
           >
             <SkipForward className="size-4" />
           </button>
@@ -106,10 +106,10 @@ export function SpotifyPlayer({
       </div>
 
       <div className="mt-3 flex items-center gap-2">
-        <span className="font-mono text-[9px] tabular-nums text-cream/60">{fmt(progress)}</span>
+        <span className="font-mono text-[9px] tabular-nums text-ink/55">{fmt(progress)}</span>
         <div className="relative h-4 flex-1">
-          <div className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 overflow-hidden rounded-full bg-cream/25">
-            <div className="h-full rounded-full bg-cream" style={{ width: `${pct}%` }} />
+          <div className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 overflow-hidden rounded-full bg-ink/20">
+            <div className="h-full rounded-full bg-ink/70" style={{ width: `${pct}%` }} />
           </div>
           <input
             type="range"
@@ -123,12 +123,11 @@ export function SpotifyPlayer({
             className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent opacity-0 disabled:cursor-default"
           />
         </div>
-        <span className="font-mono text-[9px] tabular-nums text-cream/60">{fmt(duration)}</span>
+        <span className="font-mono text-[9px] tabular-nums text-ink/55">{fmt(duration)}</span>
       </div>
 
-
       {message && (
-        <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.18em] text-cream/80">
+        <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.18em] text-ink/60">
           {message}
         </p>
       )}
