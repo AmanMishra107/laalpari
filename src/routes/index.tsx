@@ -252,136 +252,93 @@ function Index() {
           paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
         }}
       >
-        <header className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="font-display text-2xl leading-none font-extrabold tracking-tight text-lalpari sm:text-3xl">
-              BUS.WTF
-            </h1>
-            <Label className="mt-1 block">
-              {clock} · PUNE → SATARA · {j.reverseTrip ? "परतीचा प्रवास" : "ST EXPRESS"}
-            </Label>
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              onClick={s.connected ? s.disconnect : s.connect}
-              className="flex items-center gap-1.5 rounded-full border border-ink/10 bg-cream/85 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-ink"
-            >
-              {s.connected && <span className="size-1.5 rounded-full bg-spotify" aria-hidden />}
-              {s.connected ? "Connected" : "Connect Spotify"}
-            </button>
-          </div>
+        <header className="flex items-start justify-end gap-4">
+          <button
+            onClick={s.connected ? s.disconnect : s.connect}
+            className="flex items-center gap-1.5 rounded-full border border-ink/10 bg-cream/60 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-ink backdrop-blur-md"
+          >
+            {s.connected && <span className="size-1.5 rounded-full bg-spotify" aria-hidden />}
+            {s.connected ? "Connected" : "Connect Spotify"}
+          </button>
         </header>
 
         {/* Middle */}
-        <div className="relative grid grid-cols-1 items-center gap-4 md:grid-cols-[minmax(0,1fr)_auto]">
-          <div>
-            <StopChapter
-              stop={j.stop}
-              moving={j.moving}
-              nextName={j.nextIndex !== null ? stops[j.nextIndex]!.name : null}
+        <div className="relative flex items-center justify-end">
+          <div className="max-w-[19rem] rounded-lg bg-cream/70 p-3 backdrop-blur-[2px]">
+            <DecadePlaylist
+              decade={decade}
+              tracks={queue}
+              activeIndex={queueIndex}
+              onSelect={(i) => void playIndex(i)}
+              activeTitle={s.track?.name ?? null}
+              connected={s.connected}
             />
 
-            {arrived && (
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink/60">
-                  Last stop — the music continues
-                </span>
-                <button
-                  onClick={j.restart}
-                  className="rounded-full bg-lalpari px-3 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-cream transition-transform hover:scale-105"
-                >
-                  पुन्हा पुण्याला
-                </button>
+            {j.stop.decadeIds.length > 1 && (
+              <div className="mt-2 flex gap-1">
+                {j.stop.decadeIds.map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setDecadeId(d)}
+                    className={`rounded-full px-2 py-[2px] font-mono text-[9px] uppercase tracking-[0.2em] ${
+                      d === decadeId ? "bg-ink text-cream" : "text-ink/50 hover:text-ink"
+                    }`}
+                  >
+                    {d}
+                  </button>
+                ))}
               </div>
             )}
-
-          </div>
-
-          <div className="flex flex-col items-start gap-3 md:items-end md:justify-self-end">
-            <div className="max-w-[19rem] rounded-lg bg-cream/70 p-3 backdrop-blur-[2px]">
-              <DecadePlaylist
-                decade={decade}
-                tracks={queue}
-                activeIndex={queueIndex}
-                onSelect={(i) => void playIndex(i)}
-                activeTitle={s.track?.name ?? null}
-                connected={s.connected}
-              />
-
-              {j.stop.decadeIds.length > 1 && (
-                <div className="mt-2 flex gap-1">
-                  {j.stop.decadeIds.map((d) => (
-                    <button
-                      key={d}
-                      onClick={() => setDecadeId(d)}
-                      className={`rounded-full px-2 py-[2px] font-mono text-[9px] uppercase tracking-[0.2em] ${
-                        d === decadeId ? "bg-lalpari text-cream" : "text-ink/50 hover:text-ink"
-                      }`}
-                    >
-                      {d}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
         </div>
 
         {/* Bottom */}
-        <footer className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div className="w-full max-w-md">
-            <RouteBoard
-              index={j.index}
-              nextIndex={j.nextIndex}
-              skip={skip}
-              onSkipChange={setSkip}
-              onSelect={(i) => void j.travelTo(i, { skip })}
-            />
-          </div>
+        <footer className="mx-auto flex w-full max-w-lg flex-col items-stretch gap-3">
+          <SpotifyPlayer
+            track={
+              usePremium
+                ? s.track
+                : current
+                  ? ({
+                      name: current.title,
+                      artists: current.artist,
+                      artwork: artwork ?? null,
+                    } as never)
+                  : s.track
+            }
+            fallbackTitle={first.title}
+            fallbackArtist={first.artist}
+            isPlaying={usePremium ? isPlaying : embed.isPlaying}
+            progress={usePremium ? s.progress : embed.position}
+            duration={usePremium ? s.duration || 0 : embed.duration}
+            embedRef={embed.hostRef}
+            embedActive={!usePremium}
+            embedLoaded={Boolean(embed.uri)}
+            disabled={!playerReady}
+            onToggle={() =>
+              usePremium
+                ? s.track
+                  ? void s.toggle()
+                  : void playIndex(0)
+                : embed.uri
+                  ? embed.toggle()
+                  : void playIndex(0)
+            }
+            onNext={goNext}
+            onPrev={goPrev}
+            onSeek={(ms) => (usePremium ? void s.seek?.(ms) : embed.seek(Math.floor(ms / 1000)))}
+            message={j.moving ? "CHANGING RADIO…" : !playerReady ? "TUNING THE RADIO…" : s.message}
+          />
 
-          <div className="flex flex-col items-start gap-1.5 sm:items-end">
-            <SpotifyPlayer
-              track={
-                usePremium
-                  ? s.track
-                  : current
-                    ? ({
-                        name: current.title,
-                        artists: current.artist,
-                        artwork: artwork ?? null,
-                      } as never)
-                    : s.track
-              }
-
-              fallbackTitle={first.title}
-              fallbackArtist={first.artist}
-              isPlaying={usePremium ? isPlaying : embed.isPlaying}
-              progress={usePremium ? s.progress : embed.position}
-              duration={usePremium ? s.duration || 0 : embed.duration}
-              embedRef={embed.hostRef}
-              embedActive={!usePremium}
-              embedLoaded={Boolean(embed.uri)}
-              disabled={!playerReady}
-              onToggle={() =>
-                usePremium
-                  ? s.track
-                    ? void s.toggle()
-                    : void playIndex(0)
-                  : embed.uri
-                    ? embed.toggle()
-                    : void playIndex(0)
-              }
-              onNext={goNext}
-              onPrev={goPrev}
-
-              onSeek={(ms) =>
-                usePremium ? void s.seek?.(ms) : embed.seek(Math.floor(ms / 1000))
-              }
-              message={j.moving ? "CHANGING RADIO…" : !playerReady ? "TUNING THE RADIO…" : s.message}
-            />
-          </div>
+          <RouteBoard
+            index={j.index}
+            nextIndex={j.nextIndex}
+            skip={skip}
+            onSkipChange={setSkip}
+            onSelect={(i) => void j.travelTo(i, { skip })}
+          />
         </footer>
+
       </div>
     </main>
   );
