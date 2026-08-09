@@ -14,8 +14,11 @@ export type Decade = {
   route: string;
   departure: string;
   description: string;
+  /** Optional Spotify playlist ID powering this decade. */
+  playlistId?: string;
   tracks: Track[];
 };
+
 
 export const decades: Decade[] = [
   {
