@@ -1,4 +1,7 @@
-const CLIENT_ID = import.meta.env['VITE_SPOTIFY_CLIENT_ID'] as string | undefined;
+// Spotify Client ID is a publishable value (safe in client code with PKCE).
+const CLIENT_ID =
+  (import.meta.env['VITE_SPOTIFY_CLIENT_ID'] as string | undefined) ??
+  "c178a973042745fe93e2dfb46d3180a0";
 const AUTH_URL = "https://accounts.spotify.com/authorize";
 const TOKEN_URL = "https://accounts.spotify.com/api/token";
 
