@@ -250,6 +250,8 @@ export function useSpotify() {
     connect,
     disconnect,
     play,
+    playPlaylist,
+
     toggle,
     next,
     previous,
