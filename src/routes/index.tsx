@@ -10,13 +10,11 @@ import { useJourney } from "@/hooks/useJourney";
 import { JourneyIntro } from "@/components/bus/JourneyIntro";
 import { RouteBoard } from "@/components/bus/RouteBoard";
 import { Scenery } from "@/components/bus/Scenery";
-import { StopChapter } from "@/components/bus/StopChapter";
 
 import { ConductorCall } from "@/components/bus/ConductorCall";
 import { FoundMemories } from "@/components/bus/FoundMemories";
 import { DecadePlaylist } from "@/components/bus/DecadePlaylist";
 import { SpotifyPlayer } from "@/components/bus/SpotifyPlayer";
-import { Label } from "@/components/bus/Label";
 import { useSpotify } from "@/lib/spotify/useSpotify";
 import { useSpotifyEmbed } from "@/lib/spotify/useEmbed";
 
@@ -184,7 +182,6 @@ function Index() {
   // The controller is ready and the complete queue is cached before controls
   // unlock. `prepare` has already issued loadUri for track 1 at this point.
   const playerReady = usePremium || (queueReady && Boolean(queue[0]) && embed.ready);
-  const arrived = j.index === stops.length - 1 && !j.moving;
 
   const speed = j.phase === "cruise" ? 1 : j.phase === "accel" || j.phase === "brake" ? 0.45 : 0.06;
   const lean =
