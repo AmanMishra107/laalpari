@@ -207,10 +207,10 @@
 }
 
 @utility player-glass {
-  background: oklch(0.26 0.03 35 / 0.68);
-  border: 1px solid oklch(1 0 0 / 0.14);
+  background: oklch(0.22 0.02 40 / 0.32);
+  border: 1px solid oklch(1 0 0 / 0.18);
   box-shadow: 0 24px 60px -28px oklch(0.1 0.02 40 / 0.9);
-  backdrop-filter: blur(26px) saturate(140%);
+  backdrop-filter: blur(32px) saturate(160%);
 }
 
 
