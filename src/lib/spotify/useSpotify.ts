@@ -1,6 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getAccessToken, readToken, logout, beginLogin, hasClientId } from "./auth";
-import { getMe, getPlaybackState, normalize, playUris, transferPlayback, searchTrack } from "./api";
+import {
+  getMe,
+  getPlaybackState,
+  normalize,
+  playUris,
+  playContext as apiPlayContext,
+  transferPlayback,
+  searchTrack,
+} from "./api";
+
 import type { SpotifyTrack } from "./api";
 
 type SdkPlayer = {
