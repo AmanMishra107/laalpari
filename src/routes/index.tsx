@@ -82,19 +82,18 @@ function Index() {
   const queueRef = useRef(queue);
   queueRef.current = queue;
 
-  const playQueueIndex = useCallback(
-    (i: number) => {
-      const list = queueRef.current;
-      if (!list.length) return false;
-      const idx = ((i % list.length) + list.length) % list.length;
-      setQueueIndex(idx);
-      embedLoadRef.current?.(list[idx]!.uri);
-      return true;
-    },
-    [],
-  );
-
   const embedLoadRef = useRef<((uri: string) => void) | null>(null);
+
+  const playQueueIndex = useCallback((i: number) => {
+    const list = queueRef.current;
+    if (!list.length) return false;
+    const idx = ((i % list.length) + list.length) % list.length;
+    setQueueIndex(idx);
+    embedLoadRef.current?.(list[idx]!.uri);
+    return true;
+  }, []);
+
+
   const embed = useSpotifyEmbed(() => {
     if (queueIndexRef.current != null) playQueueIndex(queueIndexRef.current + 1);
   });
