@@ -20,6 +20,8 @@ export function SpotifyPlayer({
   onNext,
   onPrev,
   onVolume,
+  onSeek,
+
   onShuffle,
   onRepeat,
   message,
