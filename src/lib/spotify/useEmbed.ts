@@ -33,6 +33,7 @@ export function useSpotifyEmbed(onEnded?: () => void) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<EmbedController | null>(null);
   const pendingRef = useRef<string | null>(null);
+  const prepareTimerRef = useRef<number | null>(null);
   const endedRef = useRef(false);
   const retryRef = useRef<number[]>([]);
   const shouldPlayRef = useRef(false);
@@ -94,6 +95,13 @@ export function useSpotifyEmbed(onEnded?: () => void) {
       s.async = true;
       document.body.appendChild(s);
     }
+
+    return () => {
+      if (prepareTimerRef.current !== null) window.clearTimeout(prepareTimerRef.current);
+      retryRef.current.forEach((timer) => window.clearTimeout(timer));
+      controllerRef.current?.destroy();
+      controllerRef.current = null;
+    };
   }, []);
 
   const load = useCallback((nextUri: string, autoplay = true) => {
@@ -103,6 +111,7 @@ export function useSpotifyEmbed(onEnded?: () => void) {
     setUri(nextUri);
     setPreparedUri(null);
     setPosition(0);
+    if (prepareTimerRef.current !== null) window.clearTimeout(prepareTimerRef.current);
     retryRef.current.forEach((t) => window.clearTimeout(t));
     retryRef.current = [];
 
@@ -112,6 +121,12 @@ export function useSpotifyEmbed(onEnded?: () => void) {
     // Load exactly once. Repeated loadUri calls reset the embed and can make the
     // opening tracks appear to be skipped. Playback retries only the play command.
     c.loadUri(nextUri);
+    // Spotify does not consistently emit a paused playback_update after a
+    // preload. The controller has accepted loadUri at this point; unlock after
+    // a short settle period while keeping the requested URI unchanged.
+    prepareTimerRef.current = window.setTimeout(() => {
+      if (pendingRef.current === nextUri) setPreparedUri(nextUri);
+    }, 1200);
     if (autoplay) {
       [300, 750, 1500, 2600].forEach((delay) => {
         retryRef.current.push(window.setTimeout(() => {
