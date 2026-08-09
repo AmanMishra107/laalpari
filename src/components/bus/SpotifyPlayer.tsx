@@ -142,7 +142,7 @@ export function SpotifyPlayer({
         </p>
       </div>
 
-      <div className="flex shrink-0 items-center gap-3">
+      <div className="col-span-2 flex shrink-0 items-center justify-center gap-5 sm:col-span-1 sm:justify-end sm:gap-3">
         <button
           onClick={onPrev}
           disabled={disabled}
