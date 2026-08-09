@@ -157,8 +157,8 @@ export const decades: Decade[] = [
   },
 ];
 
-export const defaultDecadeId = "60s";
+export const defaultDecadeId = "90s";
 
 export function getDecade(id: string): Decade {
-  return decades.find((d) => d.id === id) ?? decades[0]!;
+  return decades.find((d) => d.id === id) ?? decades[3]!;
 }
