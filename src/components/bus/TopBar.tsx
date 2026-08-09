@@ -13,7 +13,7 @@ export function TopBar({
   const travelling = useLiveViewers();
 
   return (
-    <div className="topbar-glass flex h-9 w-full items-center gap-4 px-4">
+    <div className="flex h-9 w-full items-center gap-4 px-4">
       <span className="shrink-0 font-mono text-[11px] font-medium tabular-nums text-white/90">
         {clock}
       </span>

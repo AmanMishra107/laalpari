@@ -13,9 +13,9 @@ export function RouteBoard({
   const progress = (nextIndex ?? index) / (stops.length - 1);
 
   return (
-    <div className="flex w-full flex-col gap-2 border-t border-ink/10 bg-cream/30 px-4 py-3">
+    <div className="flex w-full flex-col gap-2 px-4 py-3">
       <div className="flex items-center justify-center gap-2">
-        <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-ink/50">
+        <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/70">
           गाण्यांचा प्रवास · Radio Years
         </span>
       </div>
