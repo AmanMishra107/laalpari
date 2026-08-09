@@ -35,7 +35,7 @@ export function useSpotifyEmbed(onEnded?: () => void) {
   const pendingRef = useRef<string | null>(null);
   const endedRef = useRef(false);
   const retryRef = useRef<number[]>([]);
-  const gotUpdateRef = useRef(false);
+  const shouldPlayRef = useRef(false);
   const onEndedRef = useRef(onEnded);
   onEndedRef.current = onEnded;
   const [ready, setReady] = useState(false);
@@ -43,6 +43,7 @@ export function useSpotifyEmbed(onEnded?: () => void) {
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
   const [uri, setUri] = useState<string | null>(null);
+  const [preparedUri, setPreparedUri] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined" || controllerRef.current) return;
@@ -58,8 +59,11 @@ export function useSpotifyEmbed(onEnded?: () => void) {
           controller.addListener("playback_update", ((e: {
             data: { isPaused: boolean; position: number; duration: number };
           }) => {
+            if (e.data.duration > 0 && pendingRef.current) {
+              setPreparedUri(pendingRef.current);
+              if (shouldPlayRef.current && e.data.isPaused) controller.play();
+            }
             if (!e.data.isPaused || e.data.position > 0) {
-              gotUpdateRef.current = true;
               retryRef.current.forEach((t) => window.clearTimeout(t));
               retryRef.current = [];
             }
@@ -77,7 +81,7 @@ export function useSpotifyEmbed(onEnded?: () => void) {
             }
           }) as never);
           setReady(true);
-          if (pendingRef.current) controller.loadUri(pendingRef.current);
+           if (pendingRef.current) controller.loadUri(pendingRef.current);
         },
       );
     };
@@ -94,28 +98,34 @@ export function useSpotifyEmbed(onEnded?: () => void) {
 
   const load = useCallback((nextUri: string, autoplay = true) => {
     pendingRef.current = nextUri;
+    shouldPlayRef.current = autoplay;
     endedRef.current = false;
-    gotUpdateRef.current = false;
     setUri(nextUri);
+    setPreparedUri(null);
     setPosition(0);
     retryRef.current.forEach((t) => window.clearTimeout(t));
     retryRef.current = [];
 
-    // The iframe may still be booting on the very first clicks — retry until it answers.
-    const attempt = (n: number) => {
-      const c = controllerRef.current;
-      if (!c || pendingRef.current !== nextUri) return;
-      c.loadUri(nextUri);
-      if (autoplay) c.play();
-      if (!gotUpdateRef.current && n < 6) {
-        retryRef.current.push(window.setTimeout(() => attempt(n + 1), 500));
-      }
-    };
-    attempt(0);
+    const c = controllerRef.current;
+    if (!c) return;
+
+    // Load exactly once. Repeated loadUri calls reset the embed and can make the
+    // opening tracks appear to be skipped. Playback retries only the play command.
+    c.loadUri(nextUri);
+    if (autoplay) {
+      [300, 750, 1500, 2600].forEach((delay) => {
+        retryRef.current.push(window.setTimeout(() => {
+          if (pendingRef.current === nextUri && shouldPlayRef.current) c.play();
+        }, delay));
+      });
+    }
   }, []);
 
-
-  const toggle = useCallback(() => controllerRef.current?.togglePlay(), []);
+  const prepare = useCallback((nextUri: string) => load(nextUri, false), [load]);
+  const toggle = useCallback(() => {
+    shouldPlayRef.current = !isPlaying;
+    controllerRef.current?.togglePlay();
+  }, [isPlaying]);
   const seek = useCallback((seconds: number) => {
     setPosition(seconds * 1000);
     controllerRef.current?.seek(seconds);
@@ -134,6 +144,19 @@ export function useSpotifyEmbed(onEnded?: () => void) {
     return false;
   }, []);
 
-  return { hostRef, ready, isPlaying, position, duration, uri, load, toggle, seek, setVolume };
+  return {
+    hostRef,
+    ready,
+    preparedUri,
+    isPlaying,
+    position,
+    duration,
+    uri,
+    prepare,
+    load,
+    toggle,
+    seek,
+    setVolume,
+  };
 }
 
