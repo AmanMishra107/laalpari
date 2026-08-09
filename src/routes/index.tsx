@@ -186,58 +186,36 @@ function Index() {
   // unlock. `prepare` has already issued loadUri for track 1 at this point.
   const playerReady = usePremium || (queueReady && Boolean(queue[0]) && embed.ready);
 
-  const speed = j.phase === "cruise" ? 1 : j.phase === "accel" || j.phase === "brake" ? 0.45 : 0.06;
-  const lean =
-    j.phase === "accel"
-      ? "translate3d(1.1%, 0, 0) rotate(-0.7deg)"
-      : j.phase === "brake"
-        ? "translate3d(-1%, 0.4%, 0) rotate(0.6deg)"
-        : "translate3d(0,0,0) rotate(0deg)";
+
+  // The scene we should be showing: while travelling, the next era fades in.
+  const sceneIndex = j.moving && j.nextIndex != null ? j.nextIndex : j.index;
 
   return (
     <main className="relative h-dvh w-screen overflow-hidden bg-cream">
-      {/* Scene: interior + live window */}
+      {/* Scene: one hand-painted era per stop, cross-fading seamlessly */}
       <div className="paper-grain absolute inset-0">
-        <div
-          className="size-full transition-transform duration-700 ease-out will-change-transform"
-          style={{ transform: lean }}
-        >
+        {eraScenes.map((scene, i) => (
           <img
-            src={busScene}
-            alt="Illustration of an old red Maharashtra ST bus interior with passengers, a conductor and a young man in headphones at the window"
-            width={1920}
-            height={1088}
-            className={`size-full object-cover ${j.moving ? "bus-cruise" : "bus-idle"}`}
+            key={scene.url}
+            src={scene.url}
+            alt={scene.alt}
+            loading={i === 0 ? "eager" : "lazy"}
+            className="absolute inset-0 size-full object-cover transition-opacity duration-[1600ms] ease-in-out will-change-[opacity]"
+            style={{ opacity: i === sceneIndex ? 1 : 0 }}
           />
-          <Scenery stop={j.stop} moving={j.moving} speed={speed} />
-        </div>
+        ))}
 
         {/* era colour wash — the world changes, the bus doesn't */}
         <div
-          className="pointer-events-none absolute inset-0 transition-all duration-[1200ms] mix-blend-multiply"
+          className="pointer-events-none absolute inset-0 transition-all duration-[1600ms] mix-blend-multiply"
           style={{
             background: `linear-gradient(to bottom, ${j.stop.palette.skyTop}, ${j.stop.palette.glow})`,
-            opacity: j.stop.weather === "night" ? 0.4 : 0.16,
+            opacity: j.stop.weather === "night" ? 0.3 : 0.1,
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-cream/80 via-cream/25 to-transparent md:from-cream/65 md:via-cream/10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-cream/55 via-transparent to-cream/55 md:from-cream/30 md:to-cream/25" />
-
-        {/* hanging handle reacting to physics */}
-        <div className="pointer-events-none absolute left-[42%] top-0 hidden md:block">
-          <div
-            className="handle-swing origin-top"
-            style={{
-              animationDuration: j.moving ? "1.1s" : "4.2s",
-              transform: j.phase === "accel" ? "rotate(9deg)" : j.phase === "brake" ? "rotate(-9deg)" : undefined,
-              transition: "transform 700ms ease-out",
-            }}
-          >
-            <div className="h-14 w-px bg-ink/25" />
-            <div className="size-4 rounded-b-full border border-ink/25" />
-          </div>
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-cream/40 via-transparent to-cream/55 md:from-cream/25 md:to-cream/30" />
       </div>
+
 
       <ConductorCall text={j.announce} />
       {!j.moving && <FoundMemories stop={j.stop} />}
