@@ -29,10 +29,13 @@ declare global {
 
 const SCRIPT_ID = "spotify-embed-api";
 
-export function useSpotifyEmbed() {
+export function useSpotifyEmbed(onEnded?: () => void) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<EmbedController | null>(null);
   const pendingRef = useRef<string | null>(null);
+  const endedRef = useRef(false);
+  const onEndedRef = useRef(onEnded);
+  onEndedRef.current = onEnded;
   const [ready, setReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState(0);
@@ -56,6 +59,15 @@ export function useSpotifyEmbed() {
             setIsPlaying(!e.data.isPaused);
             setPosition(e.data.position);
             setDuration(e.data.duration);
+            const d = e.data.duration;
+            if (d > 0 && e.data.position >= d - 1200) {
+              if (!endedRef.current) {
+                endedRef.current = true;
+                onEndedRef.current?.();
+              }
+            } else if (e.data.position < d - 2500) {
+              endedRef.current = false;
+            }
           }) as never);
           setReady(true);
           if (pendingRef.current) controller.loadUri(pendingRef.current);
@@ -75,7 +87,9 @@ export function useSpotifyEmbed() {
 
   const load = useCallback((nextUri: string, autoplay = true) => {
     pendingRef.current = nextUri;
+    endedRef.current = false;
     setUri(nextUri);
+    setPosition(0);
     const c = controllerRef.current;
     if (!c) return;
     c.loadUri(nextUri);
@@ -87,3 +101,4 @@ export function useSpotifyEmbed() {
 
   return { hostRef, ready, isPlaying, position, duration, uri, load, toggle, seek };
 }
+
