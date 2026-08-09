@@ -21,7 +21,7 @@ export function DecadePlaylist({
         {decade.tracks.slice(0, 7).map((t, i) => {
           const active = activeTitle === t.title;
           return (
-            <li key={`${decade.id}-${t.title}`}>
+            <li key={`${decade.id}-${t.title}`} className={i > 4 ? "hidden sm:block" : ""}>
               <button
                 onClick={() => onSelect(i)}
                 className="group flex w-full items-baseline gap-2 rounded-sm px-1 py-[3px] text-left transition-colors hover:bg-ink/5"

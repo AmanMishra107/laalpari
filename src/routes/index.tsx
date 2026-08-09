@@ -89,7 +89,8 @@ function Index() {
           height={1088}
           className="scene-motion size-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-cream/55 via-cream/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-cream/75 via-cream/25 to-transparent md:from-cream/60 md:via-cream/10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-cream/60 via-transparent to-cream/50 md:from-cream/30 md:to-cream/20" />
       </div>
 
       {/* Loading curtain */}
@@ -127,7 +128,7 @@ function Index() {
           <div className="flex items-center gap-3 sm:gap-5">
             <button
               onClick={s.connected ? s.disconnect : s.connect}
-              className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-ink/60 transition-colors hover:text-ink"
+              className="flex items-center gap-1.5 rounded-full bg-cream/70 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-ink/70 transition-colors hover:text-ink"
             >
               {s.connected && (
                 <span className="size-1.5 rounded-full bg-spotify" aria-hidden />
@@ -137,7 +138,7 @@ function Index() {
             <button
               onClick={() => setAboutOpen((v) => !v)}
               aria-expanded={aboutOpen}
-              className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink/60 transition-colors hover:text-ink"
+              className="rounded-full bg-cream/70 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-ink/70 transition-colors hover:text-ink"
             >
               About
             </button>
@@ -207,7 +208,9 @@ function Index() {
 
           <div className="flex flex-col items-start gap-1.5 sm:items-end">
             {!s.connected && (
-              <Label>Press play to start the journey</Label>
+              <span className="rounded-full bg-cream/70 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.24em] text-ink/70">
+                Press play to start the journey
+              </span>
             )}
             {s.premium === false && (
               <a
