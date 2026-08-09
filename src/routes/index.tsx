@@ -15,6 +15,7 @@ import { DecadePlaylist } from "@/components/bus/DecadePlaylist";
 import { SpotifyPlayer } from "@/components/bus/SpotifyPlayer";
 import { Label } from "@/components/bus/Label";
 import { useSpotify } from "@/lib/spotify/useSpotify";
+import { useSpotifyEmbed } from "@/lib/spotify/useEmbed";
 import { searchUrl } from "@/lib/spotify/api";
 
 export const Route = createFileRoute("/")({
@@ -65,14 +66,31 @@ function Index() {
     return () => clearInterval(t);
   }, []);
 
+  const embed = useSpotifyEmbed();
+  const usePremium = s.connected && s.premium === true;
+
   const playIndex = useCallback(
     async (i: number) => {
       const t = decade.tracks[i];
       if (!t) return;
-      if (!s.connected) {
-        s.connect();
+
+      // No Premium session needed: the Spotify embed plays the era playlist.
+      if (!usePremium) {
+        if (decade.playlistId) {
+          embed.load(`spotify:playlist:${decade.playlistId}`);
+          s.setMessage(null);
+          return;
+        }
+        const found = await s.resolve(t.title, t.artist).catch(() => null);
+        if (found) {
+          embed.load(found.uri);
+          s.setMessage(null);
+        } else {
+          s.setMessage("CONNECT SPOTIFY FOR THIS ERA");
+        }
         return;
       }
+
       try {
         if (decade.playlistId) {
           await s.playPlaylist(decade.playlistId, i);
@@ -85,8 +103,9 @@ function Index() {
         s.setMessage("RADIO SIGNAL LOST");
       }
     },
-    [decade, s],
+    [decade, s, embed, usePremium],
   );
+
 
 
   const first = decade.tracks[0]!;
@@ -269,13 +288,24 @@ function Index() {
               track={s.track}
               fallbackTitle={first.title}
               fallbackArtist={first.artist}
-              isPlaying={isPlaying}
-              progress={s.progress}
-              duration={s.duration || 0}
+              isPlaying={usePremium ? isPlaying : embed.isPlaying}
+              progress={usePremium ? s.progress : embed.position}
+              duration={usePremium ? s.duration || 0 : embed.duration}
               volume={s.volume}
               shuffle={s.shuffle}
               repeat={s.repeat}
-              onToggle={() => (s.track ? void s.toggle() : void playIndex(0))}
+              embedRef={embed.hostRef}
+              embedActive={!usePremium}
+              embedLoaded={Boolean(embed.uri)}
+              onToggle={() =>
+                usePremium
+                  ? s.track
+                    ? void s.toggle()
+                    : void playIndex(0)
+                  : embed.uri
+                    ? embed.toggle()
+                    : void playIndex(0)
+              }
               onNext={s.next}
               onPrev={s.previous}
               onVolume={s.setVolume}

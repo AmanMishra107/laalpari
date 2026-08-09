@@ -23,6 +23,9 @@ export function SpotifyPlayer({
   onShuffle,
   onRepeat,
   message,
+  embedRef,
+  embedActive,
+  embedLoaded,
 }: {
   track: SpotifyTrack | null;
   fallbackTitle: string;
@@ -40,6 +43,9 @@ export function SpotifyPlayer({
   onShuffle: () => void;
   onRepeat: () => void;
   message: string | null;
+  embedRef?: React.RefObject<HTMLDivElement | null>;
+  embedActive?: boolean;
+  embedLoaded?: boolean;
 }) {
   const pct = duration ? Math.min(100, (progress / duration) * 100) : 0;
 
@@ -148,6 +154,15 @@ export function SpotifyPlayer({
           {message}
         </p>
       )}
+
+      {/* Spotify embed engine — plays without Premium */}
+      <div
+        ref={embedRef}
+        className={`overflow-hidden rounded-md transition-all ${
+          embedActive && embedLoaded ? "mt-2 h-[80px] opacity-100" : "h-0 opacity-0"
+        }`}
+        aria-hidden={!embedActive || !embedLoaded}
+      />
     </section>
   );
 }
