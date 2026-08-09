@@ -57,10 +57,13 @@ function Index() {
   useEffect(() => {
     const tick = () => {
       const now = new Date();
+      const h = now.getHours();
+      const h12 = h % 12 === 0 ? 12 : h % 12;
       setClock(
-        `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`,
+        `${h12}:${String(now.getMinutes()).padStart(2, "0")} ${h < 12 ? "am" : "pm"}`,
       );
     };
+
     tick();
     const t = setInterval(tick, 20000);
     return () => clearInterval(t);
