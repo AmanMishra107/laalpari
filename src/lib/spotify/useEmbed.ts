@@ -86,6 +86,11 @@ export function useSpotifyEmbed(onEnded?: () => void) {
               retryRef.current = [];
             }
             setIsPlaying(!e.data.isPaused);
+            anchorRef.current = {
+              position: e.data.position,
+              at: performance.now(),
+              playing: !e.data.isPaused,
+            };
             setPosition(e.data.position);
             setDuration(e.data.duration);
             const d = e.data.duration;
