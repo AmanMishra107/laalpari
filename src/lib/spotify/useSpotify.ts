@@ -259,6 +259,8 @@ export function useSpotify() {
     next,
     previous,
     setVolume,
+    seek,
+
     setShuffle,
     setRepeat,
     resolve,
