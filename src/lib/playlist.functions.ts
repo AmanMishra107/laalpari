@@ -57,3 +57,18 @@ export const getPlaylistTracks = createServerFn({ method: "GET" })
       return [];
     }
   });
+
+/** Album artwork for a Spotify track URI, via the public oEmbed endpoint. */
+export const getTrackArtwork = createServerFn({ method: "GET" })
+  .inputValidator((data) => z.object({ uri: z.string().min(1) }).parse(data))
+  .handler(async ({ data }): Promise<string | null> => {
+    const id = data.uri.split(":").pop();
+    if (!id) return null;
+    const res = await fetch(
+      `https://open.spotify.com/oembed?url=https://open.spotify.com/track/${id}`,
+      { headers: { "user-agent": "Mozilla/5.0" } },
+    );
+    if (!res.ok) return null;
+    const json = (await res.json()) as { thumbnail_url?: string };
+    return json.thumbnail_url ?? null;
+  });
