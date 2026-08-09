@@ -188,6 +188,30 @@ export function useSpotify() {
     [connected, connect, premium],
   );
 
+  const playPlaylist = useCallback(
+    async (playlistId: string, offset = 0) => {
+      if (!connected) return connect();
+      if (premium === false) {
+        setMessage("Spotify Premium is required for browser playback.");
+        return;
+      }
+      setStatus("loading");
+      try {
+        await apiPlayContext(
+          `spotify:playlist:${playlistId}`,
+          offset,
+          deviceRef.current ?? undefined,
+        );
+        setMessage(null);
+      } catch {
+        setStatus("error");
+        setMessage("RADIO SIGNAL LOST");
+      }
+    },
+    [connected, connect, premium],
+  );
+
+
   const toggle = useCallback(async () => {
     if (!connected) return connect();
     if (premium === false) {
