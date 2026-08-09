@@ -9,6 +9,7 @@ import { stops } from "@/data/journey";
 import { useJourney } from "@/hooks/useJourney";
 import { JourneyIntro } from "@/components/bus/JourneyIntro";
 import { RouteBoard } from "@/components/bus/RouteBoard";
+import { TopBar } from "@/components/bus/TopBar";
 import { Scenery } from "@/components/bus/Scenery";
 
 import { ConductorCall } from "@/components/bus/ConductorCall";

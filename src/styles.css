@@ -327,3 +327,9 @@
   border: 1px dashed color-mix(in oklab, var(--color-ink) 28%, transparent);
   box-shadow: 0 16px 34px -26px oklch(0.2 0.05 30 / 0.8);
 }
+
+@utility topbar-glass {
+  background: oklch(0.24 0.03 35 / 0.55);
+  border-bottom: 1px solid oklch(1 0 0 / 0.12);
+  backdrop-filter: blur(18px) saturate(140%);
+}
