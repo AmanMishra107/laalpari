@@ -128,7 +128,7 @@ function Index() {
           <div className="flex items-center gap-3 sm:gap-5">
             <button
               onClick={s.connected ? s.disconnect : s.connect}
-              className="flex items-center gap-1.5 rounded-full bg-cream/70 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-ink/70 transition-colors hover:text-ink"
+              className="flex items-center gap-1.5 rounded-full border border-ink/10 bg-cream/85 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-ink transition-colors hover:text-ink"
             >
               {s.connected && (
                 <span className="size-1.5 rounded-full bg-spotify" aria-hidden />
@@ -138,7 +138,7 @@ function Index() {
             <button
               onClick={() => setAboutOpen((v) => !v)}
               aria-expanded={aboutOpen}
-              className="rounded-full bg-cream/70 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-ink/70 transition-colors hover:text-ink"
+              className="rounded-full border border-ink/10 bg-cream/85 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-ink transition-colors hover:text-ink"
             >
               About
             </button>
@@ -208,7 +208,7 @@ function Index() {
 
           <div className="flex flex-col items-start gap-1.5 sm:items-end">
             {!s.connected && (
-              <span className="rounded-full bg-cream/70 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.24em] text-ink/70">
+              <span className="rounded-full border border-ink/10 bg-cream/85 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.24em] text-ink">
                 Press play to start the journey
               </span>
             )}
