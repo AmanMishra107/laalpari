@@ -133,6 +133,11 @@ export function useSpotifyEmbed(onEnded?: () => void) {
     setUri(nextUri);
     setPreparedUri(null);
     setPosition(0);
+    setDuration(0);
+    // Optimistic: the UI flips to the new track instantly instead of waiting
+    // for Spotify's first playback_update.
+    setIsPlaying(autoplay);
+    anchorRef.current = { position: 0, at: performance.now(), playing: false };
     if (prepareTimerRef.current !== null) window.clearTimeout(prepareTimerRef.current);
     retryRef.current.forEach((t) => window.clearTimeout(t));
     retryRef.current = [];
