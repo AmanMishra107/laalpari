@@ -182,9 +182,9 @@ function Index() {
 
 
   const isPlaying = s.status === "playing";
-  const playerReady = usePremium || (
-    queueReady && Boolean(queue[0]) && embed.ready && embed.preparedUri === queue[0]?.uri
-  );
+  // The controller is ready and the complete queue is cached before controls
+  // unlock. `prepare` has already issued loadUri for track 1 at this point.
+  const playerReady = usePremium || (queueReady && Boolean(queue[0]) && embed.ready);
   const arrived = j.index === stops.length - 1 && !j.moving;
 
   const speed = j.phase === "cruise" ? 1 : j.phase === "accel" || j.phase === "brake" ? 0.45 : 0.06;
