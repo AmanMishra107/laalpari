@@ -15,6 +15,7 @@ import { DecadePlaylist } from "@/components/bus/DecadePlaylist";
 import { SpotifyPlayer } from "@/components/bus/SpotifyPlayer";
 import { Label } from "@/components/bus/Label";
 import { useSpotify } from "@/lib/spotify/useSpotify";
+import { useSpotifyEmbed } from "@/lib/spotify/useEmbed";
 import { searchUrl } from "@/lib/spotify/api";
 
 export const Route = createFileRoute("/")({
