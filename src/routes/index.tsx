@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getPlaylistTracks } from "@/lib/playlist.functions";
+import { getPlaylistTracks, getTrackArtwork } from "@/lib/playlist.functions";
 
 import busScene from "@/assets/bus-scene.jpg";
 import { getDecade } from "@/data/decades";
@@ -157,6 +157,13 @@ function Index() {
 
   const first = decade.tracks[0]!;
   const current = queueIndex != null ? (queue[queueIndex] ?? null) : null;
+  const { data: artwork = null } = useQuery({
+    queryKey: ["artwork", current?.uri],
+    queryFn: () => getTrackArtwork({ data: { uri: current!.uri } }),
+    enabled: Boolean(current?.uri),
+    staleTime: Infinity,
+  });
+
 
   const isPlaying = s.status === "playing";
   const arrived = j.index === stops.length - 1 && !j.moving;
@@ -337,7 +344,18 @@ function Index() {
               </a>
             )}
             <SpotifyPlayer
-              track={usePremium ? s.track : current ? { name: current.title, artists: current.artist, artwork: null } as never : s.track}
+              track={
+                usePremium
+                  ? s.track
+                  : current
+                    ? ({
+                        name: current.title,
+                        artists: current.artist,
+                        artwork: artwork ?? null,
+                      } as never)
+                    : s.track
+              }
+
               fallbackTitle={first.title}
               fallbackArtist={first.artist}
               isPlaying={usePremium ? isPlaying : embed.isPlaying}
