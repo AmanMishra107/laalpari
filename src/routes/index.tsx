@@ -11,7 +11,7 @@ import { JourneyIntro } from "@/components/bus/JourneyIntro";
 import { RouteBoard } from "@/components/bus/RouteBoard";
 import { Scenery } from "@/components/bus/Scenery";
 import { StopChapter } from "@/components/bus/StopChapter";
-import { Ticket } from "@/components/bus/Ticket";
+
 import { ConductorCall } from "@/components/bus/ConductorCall";
 import { FoundMemories } from "@/components/bus/FoundMemories";
 import { DecadePlaylist } from "@/components/bus/DecadePlaylist";
@@ -47,7 +47,6 @@ function Index() {
   const s = useSpotify();
   const [skip, setSkip] = useState(false);
   const [decadeId, setDecadeId] = useState(stops[0]!.decadeIds[0]!);
-  const [secret, setSecret] = useState(false);
   const [clock, setClock] = useState("06:15");
   const decade = useMemo(() => getDecade(decadeId), [decadeId]);
   const queryClient = useQueryClient();
@@ -297,13 +296,6 @@ function Index() {
               </div>
             )}
 
-            {secret && (
-              <p className="mt-3 max-w-xs font-display text-[13px] leading-relaxed text-ink/70">
-                काही प्रवास परत करता येतात.
-                <br />
-                काही फक्त आठवता येतात.
-              </p>
-            )}
           </div>
 
           <div className="flex flex-col items-start gap-3 md:items-end md:justify-self-end">
@@ -332,9 +324,6 @@ function Index() {
                   ))}
                 </div>
               )}
-            </div>
-            <div className="hidden md:block">
-              <Ticket stop={j.stop} index={j.index} onSecret={() => setSecret((v) => !v)} />
             </div>
           </div>
         </div>
