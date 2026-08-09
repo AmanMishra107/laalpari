@@ -1,4 +1,4 @@
-import { Pause, Play, Repeat, Shuffle, SkipBack, SkipForward, Volume2 } from "lucide-react";
+import { Pause, Play, Repeat, Shuffle, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react";
 import type { SpotifyTrack } from "@/lib/spotify/api";
 
 const fmt = (ms: number) => {
@@ -21,6 +21,7 @@ export function SpotifyPlayer({
   onPrev,
   onVolume,
   onSeek,
+  volumeEnabled,
 
   onShuffle,
   onRepeat,
@@ -43,6 +44,7 @@ export function SpotifyPlayer({
   onPrev: () => void;
   onVolume: (v: number) => void;
   onSeek?: (ms: number) => void;
+  volumeEnabled?: boolean;
 
   onShuffle: () => void;
   onRepeat: () => void;
