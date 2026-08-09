@@ -168,14 +168,7 @@ export function SpotifyPlayer({
         </p>
       )}
 
-      {/* Spotify embed engine — kept full-size & rendered (media needs real layout),
-          but parked off-screen so only the Lal Pari UI is visible */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed bottom-0 left-0 z-[-1] h-[80px] w-[320px] -translate-x-[200vw]"
-      >
-        <div ref={embedRef} className="h-[80px] w-[320px]" />
-      </div>
+
 
 
 
