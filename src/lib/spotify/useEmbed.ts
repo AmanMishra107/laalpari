@@ -85,19 +85,31 @@ export function useSpotifyEmbed(onEnded?: () => void) {
     }
   }, []);
 
+  const retryRef = useRef<number[]>([]);
+  const gotUpdateRef = useRef(false);
+
   const load = useCallback((nextUri: string, autoplay = true) => {
     pendingRef.current = nextUri;
     endedRef.current = false;
+    gotUpdateRef.current = false;
     setUri(nextUri);
     setPosition(0);
-    const c = controllerRef.current;
-    if (!c) return;
-    c.loadUri(nextUri);
-    if (autoplay) {
-      c.play();
-      window.setTimeout(() => c.play(), 400);
-    }
+    retryRef.current.forEach((t) => window.clearTimeout(t));
+    retryRef.current = [];
+
+    // The iframe may still be booting on the very first clicks — retry until it answers.
+    const attempt = (n: number) => {
+      const c = controllerRef.current;
+      if (!c || pendingRef.current !== nextUri) return;
+      c.loadUri(nextUri);
+      if (autoplay) c.play();
+      if (!gotUpdateRef.current && n < 6) {
+        retryRef.current.push(window.setTimeout(() => attempt(n + 1), 500));
+      }
+    };
+    attempt(0);
   }, []);
+
 
   const toggle = useCallback(() => controllerRef.current?.togglePlay(), []);
   const seek = useCallback((seconds: number) => {
