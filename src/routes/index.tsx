@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPlaylistTracks, getTrackArtwork } from "@/lib/playlist.functions";
 
 import busScene from "@/assets/bus-scene.jpg";
@@ -50,6 +50,7 @@ function Index() {
   const [secret, setSecret] = useState(false);
   const [clock, setClock] = useState("06:15");
   const decade = useMemo(() => getDecade(decadeId), [decadeId]);
+  const queryClient = useQueryClient();
 
   // the radio only changes once the bus has actually arrived
   useEffect(() => {
@@ -72,7 +73,7 @@ function Index() {
   const queueIndexRef = useRef<number | null>(null);
   queueIndexRef.current = queueIndex;
 
-  const { data: queue = [] } = useQuery({
+  const { data: queue = [], isSuccess: queueReady } = useQuery({
     queryKey: ["playlist", decade.playlistId],
     queryFn: () => getPlaylistTracks({ data: { playlistId: decade.playlistId! } }),
     enabled: Boolean(decade.playlistId),
@@ -98,6 +99,22 @@ function Index() {
   });
   embedLoadRef.current = embed.load;
   const usePremium = s.connected && s.premium === true;
+
+  // Prime the opening track before controls become available, and cache the
+  // first two covers so track 1 and the first Next action need no extra fetch.
+  useEffect(() => {
+    if (usePremium || !embed.ready || !queue[0]) return;
+    embed.prepare(queue[0].uri);
+    void Promise.all(
+      queue.slice(0, 2).map((track) =>
+        queryClient.prefetchQuery({
+          queryKey: ["artwork", track.uri],
+          queryFn: () => getTrackArtwork({ data: { uri: track.uri } }),
+          staleTime: Infinity,
+        }),
+      ),
+    );
+  }, [decade.id, embed.ready, queryClient, queue, usePremium]);
 
   useEffect(() => {
     setQueueIndex(null);
@@ -165,6 +182,9 @@ function Index() {
 
 
   const isPlaying = s.status === "playing";
+  // The controller is ready and the complete queue is cached before controls
+  // unlock. `prepare` has already issued loadUri for track 1 at this point.
+  const playerReady = usePremium || (queueReady && Boolean(queue[0]) && embed.ready);
   const arrived = j.index === stops.length - 1 && !j.moving;
 
   const speed = j.phase === "cruise" ? 1 : j.phase === "accel" || j.phase === "brake" ? 0.45 : 0.06;
@@ -353,6 +373,7 @@ function Index() {
               embedRef={embed.hostRef}
               embedActive={!usePremium}
               embedLoaded={Boolean(embed.uri)}
+              disabled={!playerReady}
               onToggle={() =>
                 usePremium
                   ? s.track
@@ -368,7 +389,7 @@ function Index() {
               onSeek={(ms) =>
                 usePremium ? void s.seek?.(ms) : embed.seek(Math.floor(ms / 1000))
               }
-              message={j.moving ? "CHANGING RADIO…" : s.message}
+              message={j.moving ? "CHANGING RADIO…" : !playerReady ? "TUNING THE RADIO…" : s.message}
             />
           </div>
         </footer>

@@ -50,6 +50,7 @@ export const decades: Decade[] = [
     route: "PUNE → KOLHAPUR",
     departure: "09:40",
     description: "Bell bottoms at the bus stand.",
+    playlistId: "1arIwnl806bdxvrgTEuvLw",
     tracks: [
       { title: "Dum Maro Dum", artist: "Asha Bhosle" },
       { title: "Mere Sapno Ki Rani", artist: "Kishore Kumar" },

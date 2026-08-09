@@ -22,6 +22,7 @@ export function SpotifyPlayer({
   embedRef,
   embedActive,
   embedLoaded,
+  disabled,
 }: {
   track: SpotifyTrack | null;
   fallbackTitle: string;
@@ -38,6 +39,7 @@ export function SpotifyPlayer({
   embedRef?: React.RefObject<HTMLDivElement | null>;
   embedActive?: boolean;
   embedLoaded?: boolean;
+  disabled?: boolean;
 }) {
   const pct = duration ? Math.min(100, (progress / duration) * 100) : 0;
 
@@ -75,16 +77,18 @@ export function SpotifyPlayer({
         <div className="flex items-center gap-1">
           <button
             onClick={onPrev}
+            disabled={disabled}
             aria-label="Previous track"
-            className="grid size-9 place-items-center rounded-full text-cream/70 transition-colors hover:text-cream"
+            className="grid size-9 place-items-center rounded-full text-cream/70 transition-colors hover:text-cream disabled:cursor-wait disabled:opacity-35"
           >
             <SkipBack className="size-4" />
           </button>
           <div className="size-11">
             <button
               onClick={onToggle}
+              disabled={disabled}
               aria-label={isPlaying ? "Pause" : "Play"}
-              className="grid size-11 place-items-center rounded-full bg-cream text-lalpari transition-transform hover:scale-105"
+              className="grid size-11 place-items-center rounded-full bg-cream text-lalpari transition-transform hover:scale-105 disabled:cursor-wait disabled:opacity-60"
             >
               {isPlaying ? <Pause className="size-5" /> : <Play className="size-5 translate-x-px" />}
             </button>
@@ -92,8 +96,9 @@ export function SpotifyPlayer({
 
           <button
             onClick={onNext}
+            disabled={disabled}
             aria-label="Next track"
-            className="grid size-9 place-items-center rounded-full text-cream/70 transition-colors hover:text-cream"
+            className="grid size-9 place-items-center rounded-full text-cream/70 transition-colors hover:text-cream disabled:cursor-wait disabled:opacity-35"
           >
             <SkipForward className="size-4" />
           </button>
