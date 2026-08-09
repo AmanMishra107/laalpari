@@ -9,6 +9,7 @@ import { stops } from "@/data/journey";
 import { useJourney } from "@/hooks/useJourney";
 import { JourneyIntro } from "@/components/bus/JourneyIntro";
 import { RouteBoard } from "@/components/bus/RouteBoard";
+import { TopBar } from "@/components/bus/TopBar";
 import { Scenery } from "@/components/bus/Scenery";
 
 import { ConductorCall } from "@/components/bus/ConductorCall";
@@ -57,10 +58,13 @@ function Index() {
   useEffect(() => {
     const tick = () => {
       const now = new Date();
+      const h = now.getHours();
+      const h12 = h % 12 === 0 ? 12 : h % 12;
       setClock(
-        `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`,
+        `${h12}:${String(now.getMinutes()).padStart(2, "0")} ${h < 12 ? "am" : "pm"}`,
       );
     };
+
     tick();
     const t = setInterval(tick, 20000);
     return () => clearInterval(t);
@@ -243,21 +247,20 @@ function Index() {
 
       {/* Poster UI */}
       <div
-        className="relative z-30 grid h-dvh grid-rows-[auto_1fr_auto] px-5 py-4 sm:px-8 sm:py-6"
+        className="relative z-30 grid h-dvh grid-rows-[auto_1fr_auto] px-5 pb-4 sm:px-8 sm:pb-6"
         style={{
-          paddingTop: "max(1rem, env(safe-area-inset-top))",
+          paddingTop: "max(0.5rem, env(safe-area-inset-top))",
           paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
         }}
       >
-        <header className="flex items-start justify-end gap-4">
-          <button
-            onClick={s.connected ? s.disconnect : s.connect}
-            className="flex items-center gap-1.5 rounded-full border border-ink/10 bg-cream/60 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-ink backdrop-blur-md"
-          >
-            {s.connected && <span className="size-1.5 rounded-full bg-spotify" aria-hidden />}
-            {s.connected ? "Connected" : "Connect Spotify"}
-          </button>
+        <header className="-mx-5 -mt-2 sm:-mx-8">
+          <TopBar
+            clock={clock}
+            connected={s.connected}
+            onConnect={s.connected ? s.disconnect : s.connect}
+          />
         </header>
+
 
         {/* Middle */}
         <div className="relative flex items-center justify-end">
