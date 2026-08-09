@@ -335,7 +335,7 @@ function Index() {
               </a>
             )}
             <SpotifyPlayer
-              track={s.track}
+              track={usePremium ? s.track : current ? { name: current.title, artists: current.artist, artwork: null } as never : s.track}
               fallbackTitle={first.title}
               fallbackArtist={first.artist}
               isPlaying={usePremium ? isPlaying : embed.isPlaying}
@@ -356,8 +356,9 @@ function Index() {
                     ? embed.toggle()
                     : void playIndex(0)
               }
-              onNext={s.next}
-              onPrev={s.previous}
+              onNext={goNext}
+              onPrev={goPrev}
+
               onVolume={s.setVolume}
               onShuffle={() => s.setShuffle(!s.shuffle)}
               onRepeat={() => s.setRepeat(!s.repeat)}
