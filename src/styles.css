@@ -226,3 +226,83 @@
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ---------- Journey physics & window ---------- */
+
+@keyframes scene-pan {
+  from { background-position: 0 bottom; }
+  to { background-position: -400px bottom; }
+}
+
+@utility scene-layer {
+  background-repeat: repeat-x;
+  background-position: 0 bottom;
+  background-size: 400px 100%;
+  animation: scene-pan linear infinite;
+}
+
+@utility window-portal {
+  clip-path: polygon(3% 6%, 100% 0%, 100% 100%, 0% 92%);
+  box-shadow: inset 0 0 60px -14px oklch(0.2 0.05 30 / 0.8);
+}
+
+@utility window-glass {
+  background:
+    linear-gradient(115deg, oklch(1 0 0 / 0.22) 0%, transparent 34%, transparent 66%, oklch(1 0 0 / 0.1) 100%);
+}
+
+@keyframes rain-fall {
+  from { background-position: 0 0, 40px 0; }
+  to { background-position: -60px 400px, 10px 380px; }
+}
+
+@utility rain-veil {
+  background-image:
+    repeating-linear-gradient(102deg, oklch(1 0 0 / 0.25) 0 1px, transparent 1px 9px),
+    repeating-linear-gradient(98deg, oklch(1 0 0 / 0.14) 0 1px, transparent 1px 17px);
+  animation: rain-fall 0.9s linear infinite;
+  opacity: 0.55;
+}
+
+@keyframes handle-swing {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@utility handle-swing {
+  transform-origin: top center;
+  animation: handle-swing 3.4s ease-in-out infinite;
+}
+
+@keyframes depot-shake {
+  0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.7; }
+  25% { transform: translate3d(0.6px, -0.5px, 0); opacity: 1; }
+  75% { transform: translate3d(-0.6px, 0.5px, 0); opacity: 0.85; }
+}
+
+@utility depot-shake {
+  animation: depot-shake 0.45s ease-in-out infinite;
+}
+
+@keyframes bus-idle {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.04) rotate(0deg); }
+  50% { transform: translate3d(-0.4%, 0.35%, 0) scale(1.04) rotate(0.12deg); }
+}
+
+@keyframes bus-cruise {
+  0% { transform: translate3d(0, 0, 0) scale(1.06); }
+  20% { transform: translate3d(-0.5%, -0.5%, 0) scale(1.06); }
+  45% { transform: translate3d(0.3%, 0.45%, 0) scale(1.062); }
+  70% { transform: translate3d(-0.35%, 0.2%, 0) scale(1.06); }
+  100% { transform: translate3d(0, 0, 0) scale(1.06); }
+}
+
+@utility bus-idle { animation: bus-idle 16s ease-in-out infinite; }
+@utility bus-cruise { animation: bus-cruise 1.5s ease-in-out infinite; }
+
+@utility ticket-paper {
+  background: oklch(0.97 0.03 92);
+  color: var(--color-ink);
+  border: 1px dashed color-mix(in oklab, var(--color-ink) 28%, transparent);
+  box-shadow: 0 16px 34px -26px oklch(0.2 0.05 30 / 0.8);
+}
