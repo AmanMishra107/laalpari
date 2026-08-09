@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPlaylistTracks, getTrackArtwork } from "@/lib/playlist.functions";
 
+import busVideoAsset from "@/assets/bus-journey-bg.mp4.asset.json";
 import { eraScenes } from "@/data/eraScenes";
 import { getDecade } from "@/data/decades";
 import { stops } from "@/data/journey";
