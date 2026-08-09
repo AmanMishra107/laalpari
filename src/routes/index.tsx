@@ -19,7 +19,6 @@ import { SpotifyPlayer } from "@/components/bus/SpotifyPlayer";
 import { Label } from "@/components/bus/Label";
 import { useSpotify } from "@/lib/spotify/useSpotify";
 import { useSpotifyEmbed } from "@/lib/spotify/useEmbed";
-import { searchUrl } from "@/lib/spotify/api";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -333,16 +332,6 @@ function Index() {
           </div>
 
           <div className="flex flex-col items-start gap-1.5 sm:items-end">
-            {s.premium === false && (
-              <a
-                href={searchUrl(first.title, first.artist)}
-                target="_blank"
-                rel="noreferrer"
-                className="font-mono text-[9px] uppercase tracking-[0.24em] text-ink/60 underline-offset-4 hover:text-ink hover:underline"
-              >
-                Open in Spotify
-              </a>
-            )}
             <SpotifyPlayer
               track={
                 usePremium

@@ -93,7 +93,10 @@ export function useSpotifyEmbed(onEnded?: () => void) {
     const c = controllerRef.current;
     if (!c) return;
     c.loadUri(nextUri);
-    if (autoplay) window.setTimeout(() => c.play(), 350);
+    if (autoplay) {
+      c.play();
+      window.setTimeout(() => c.play(), 400);
+    }
   }, []);
 
   const toggle = useCallback(() => controllerRef.current?.togglePlay(), []);
