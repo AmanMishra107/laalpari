@@ -86,12 +86,23 @@ export async function playUris(uris: string[], deviceId?: string) {
   });
 }
 
+export async function playContext(contextUri: string, offset?: number, deviceId?: string) {
+  await request(`/me/player/play${deviceId ? `?device_id=${deviceId}` : ""}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      context_uri: contextUri,
+      ...(offset !== undefined ? { offset: { position: offset } } : {}),
+    }),
+  });
+}
+
 export async function transferPlayback(deviceId: string, play = false) {
   await request(`/me/player`, {
     method: "PUT",
     body: JSON.stringify({ device_ids: [deviceId], play }),
   });
 }
+
 
 export const searchUrl = (title: string, artist: string) =>
   `https://open.spotify.com/search/${encodeURIComponent(`${title} ${artist}`)}`;

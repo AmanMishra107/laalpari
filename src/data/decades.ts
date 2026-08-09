@@ -14,8 +14,11 @@ export type Decade = {
   route: string;
   departure: string;
   description: string;
+  /** Optional Spotify playlist ID powering this decade. */
+  playlistId?: string;
   tracks: Track[];
 };
+
 
 export const decades: Decade[] = [
   {
@@ -27,6 +30,8 @@ export const decades: Decade[] = [
     route: "MUMBAI → NASHIK",
     departure: "06:15",
     description: "Slow ghats, transistor radio, morning fog.",
+    playlistId: "6mx7rVYF6ed2JTMegQ8SY0",
+
     tracks: [
       { title: "Lag Ja Gale", artist: "Lata Mangeshkar" },
       { title: "Aaja Aaja Main Hoon Pyar Tera", artist: "Mohammed Rafi" },

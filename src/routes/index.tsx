@@ -74,6 +74,10 @@ function Index() {
         return;
       }
       try {
+        if (decade.playlistId) {
+          await s.playPlaylist(decade.playlistId, i);
+          return;
+        }
         const found = await s.resolve(t.title, t.artist);
         if (found) await s.play(found.uri);
         else s.setMessage("RADIO SIGNAL LOST");
@@ -83,6 +87,7 @@ function Index() {
     },
     [decade, s],
   );
+
 
   const first = decade.tracks[0]!;
   const isPlaying = s.status === "playing";

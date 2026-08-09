@@ -1,6 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getAccessToken, readToken, logout, beginLogin, hasClientId } from "./auth";
-import { getMe, getPlaybackState, normalize, playUris, transferPlayback, searchTrack } from "./api";
+import {
+  getMe,
+  getPlaybackState,
+  normalize,
+  playUris,
+  playContext as apiPlayContext,
+  transferPlayback,
+  searchTrack,
+} from "./api";
+
 import type { SpotifyTrack } from "./api";
 
 type SdkPlayer = {
@@ -179,6 +188,30 @@ export function useSpotify() {
     [connected, connect, premium],
   );
 
+  const playPlaylist = useCallback(
+    async (playlistId: string, offset = 0) => {
+      if (!connected) return connect();
+      if (premium === false) {
+        setMessage("Spotify Premium is required for browser playback.");
+        return;
+      }
+      setStatus("loading");
+      try {
+        await apiPlayContext(
+          `spotify:playlist:${playlistId}`,
+          offset,
+          deviceRef.current ?? undefined,
+        );
+        setMessage(null);
+      } catch {
+        setStatus("error");
+        setMessage("RADIO SIGNAL LOST");
+      }
+    },
+    [connected, connect, premium],
+  );
+
+
   const toggle = useCallback(async () => {
     if (!connected) return connect();
     if (premium === false) {
@@ -217,6 +250,8 @@ export function useSpotify() {
     connect,
     disconnect,
     play,
+    playPlaylist,
+
     toggle,
     next,
     previous,
