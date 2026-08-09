@@ -332,9 +332,7 @@ function Index() {
           <RouteBoard
             index={j.index}
             nextIndex={j.nextIndex}
-            skip={skip}
-            onSkipChange={setSkip}
-            onSelect={(i) => void j.travelTo(i, { skip })}
+            onSelect={(i) => void j.travelTo(i)}
           />
         </footer>
 
