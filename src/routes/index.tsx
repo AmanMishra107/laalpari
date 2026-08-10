@@ -288,7 +288,8 @@ function Index() {
         </div>
 
         {/* Bottom */}
-        <footer className="mx-auto flex w-full max-w-lg flex-col items-stretch gap-3">
+        <footer className="mx-auto flex w-full max-w-lg flex-col items-stretch gap-4">
+          <ShayariTicker />
           <SpotifyPlayer
             track={
               usePremium
