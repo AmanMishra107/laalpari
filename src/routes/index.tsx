@@ -16,6 +16,7 @@ import { ConductorCall } from "@/components/bus/ConductorCall";
 import { FoundMemories } from "@/components/bus/FoundMemories";
 import { DecadePlaylist } from "@/components/bus/DecadePlaylist";
 import { SpotifyPlayer } from "@/components/bus/SpotifyPlayer";
+import { ShayariTicker } from "@/components/bus/ShayariTicker";
 import { useSpotify } from "@/lib/spotify/useSpotify";
 import { useSpotifyEmbed } from "@/lib/spotify/useEmbed";
 
@@ -287,7 +288,8 @@ function Index() {
         </div>
 
         {/* Bottom */}
-        <footer className="mx-auto flex w-full max-w-lg flex-col items-stretch gap-3">
+        <footer className="mx-auto flex w-full max-w-lg flex-col items-stretch gap-4">
+          <ShayariTicker />
           <SpotifyPlayer
             track={
               usePremium
