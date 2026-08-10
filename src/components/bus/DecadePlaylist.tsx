@@ -30,23 +30,23 @@ export function DecadePlaylist({
 
               <button
                 onClick={() => onSelect(i)}
-                className="group flex w-full items-center gap-2 rounded-md px-1.5 py-[5px] text-left transition-all duration-200 hover:bg-white/25 active:scale-[0.99]"
+                className="group flex w-full items-center gap-2 rounded-md px-1.5 py-[5px] text-left transition-all duration-200 hover:bg-white/10 active:scale-[0.99]"
               >
                 <span
                   className={`shrink-0 min-w-[1.1rem] font-mono text-[10px] tabular-nums transition-colors ${
-                    active ? "text-lalpari" : "text-ink/40 group-hover:text-lalpari/80"
+                    active ? "text-white" : "text-white/45 group-hover:text-white/80"
                   }`}
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span
                   className={`min-w-0 flex-1 truncate text-[12px] leading-tight transition-colors ${
-                    active ? "font-medium text-lalpari" : "text-ink/80 group-hover:text-ink"
+                    active ? "font-medium text-white" : "text-white/75 group-hover:text-white"
                   }`}
                 >
                   {t.title}
                 </span>
-                <span className="hidden max-w-[38%] truncate font-mono text-[10px] text-ink/40 sm:inline">
+                <span className="hidden max-w-[38%] truncate font-mono text-[10px] text-white/45 sm:inline">
                   {t.artist}
                 </span>
                 <span
@@ -56,7 +56,7 @@ export function DecadePlaylist({
                 >
                   <Play
                     className={`size-3 fill-current ${
-                      active ? "text-lalpari" : "text-ink/50"
+                      active ? "text-white" : "text-white/55"
                     }`}
                   />
                 </span>
