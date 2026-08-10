@@ -1,5 +1,4 @@
 import type { Decade } from "@/data/decades";
-import { searchUrl } from "@/lib/spotify/api";
 
 export function DecadePlaylist({
   decade,

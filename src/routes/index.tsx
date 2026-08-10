@@ -7,7 +7,6 @@ import heroBus from "@/assets/hero-bus.png.asset.json";
 import { getDecade } from "@/data/decades";
 import { stops } from "@/data/journey";
 import { useJourney } from "@/hooks/useJourney";
-import { JourneyIntro } from "@/components/bus/JourneyIntro";
 import { RouteBoard } from "@/components/bus/RouteBoard";
 import { TopBar } from "@/components/bus/TopBar";
 
@@ -232,7 +231,6 @@ function Index() {
 
       {!j.moving && <FoundMemories stop={j.stop} />}
 
-      {j.phase === "intro" && <JourneyIntro onDepart={j.depart} />}
 
 
       {/* Poster UI */}

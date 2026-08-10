@@ -190,7 +190,7 @@ export const stops: Stop[] = [
     name: "SATARA",
     nameMr: "सातारा",
     noMr: "थांबा ०६",
-    decadeIds: ["10s", "20s"],
+    decadeIds: ["10s"],
     eraLabel: "TODAY",
     mood: "Arrival.",
     lineMr: "प्रवास संपला. गाणी नाही.",
