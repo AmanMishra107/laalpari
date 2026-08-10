@@ -23,54 +23,48 @@ const shayaris = [
   "मोहब्बत में नहीं है फ़र्क़ जीने और मरने का,\nउसी को देखकर जीते हैं जिस काफ़िर पे दम निकले। — मिर्ज़ा ग़ालिब",
 ];
 
-const TRANSITION_MS = 1000;
+const FADE_MS = 900;
 const DISPLAY_MS = 20000;
 
 export function ShayariTicker() {
-  const [current, setCurrent] = useState(0);
-  const [next, setNext] = useState(1);
-  const [phase, setPhase] = useState<"hold" | "exit">("hold");
-  const [mounted, setMounted] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [visible, setVisible] = useState(false);
 
+  // fade in on mount
   useEffect(() => {
-    setMounted(true);
-    const interval = window.setInterval(() => {
-      setPhase("exit");
-    }, DISPLAY_MS);
-    return () => window.clearInterval(interval);
+    const t = window.setTimeout(() => setVisible(true), 60);
+    return () => window.clearTimeout(t);
   }, []);
 
   useEffect(() => {
-    if (phase !== "exit") return;
-    const timer = window.setTimeout(() => {
-      setCurrent(next);
-      setNext((n) => (n + 1) % shayaris.length);
-      setPhase("hold");
-    }, TRANSITION_MS);
-    return () => window.clearTimeout(timer);
-  }, [phase, next]);
-
-  const base =
-    "font-display text-[12px] sm:text-[15px] leading-relaxed tracking-wide text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.55)] transition-opacity duration-1000 ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[opacity] whitespace-pre-line";
+    let swap: number | undefined;
+    const cycle = window.setInterval(() => {
+      setVisible(false);
+      swap = window.setTimeout(() => {
+        setIndex((i) => (i + 1) % shayaris.length);
+        setVisible(true);
+      }, FADE_MS);
+    }, DISPLAY_MS);
+    return () => {
+      window.clearInterval(cycle);
+      if (swap) window.clearTimeout(swap);
+    };
+  }, []);
 
   return (
     <div
       aria-live="polite"
-      className="relative mx-auto h-28 w-full max-w-lg px-2 text-center sm:h-24 sm:px-6"
+      className="mx-auto flex h-24 w-full max-w-lg items-center justify-center px-2 text-center sm:h-24 sm:px-6"
     >
       <p
-        className={`absolute inset-x-2 top-0 sm:inset-x-6 ${base} ${
-          mounted && phase === "hold" ? "opacity-100" : "opacity-0"
-        }`}
+        className="font-display whitespace-pre-line text-[11px] leading-relaxed tracking-wide text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.55)] will-change-[opacity,transform] sm:text-[15px]"
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? "translateY(0px)" : "translateY(4px)",
+          transition: `opacity ${FADE_MS}ms cubic-bezier(0.33,1,0.68,1), transform ${FADE_MS}ms cubic-bezier(0.33,1,0.68,1)`,
+        }}
       >
-        {shayaris[current]}
-      </p>
-      <p
-        className={`absolute inset-x-2 top-0 sm:inset-x-6 ${base} ${
-          mounted && phase === "exit" ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        {shayaris[next]}
+        {shayaris[index]}
       </p>
     </div>
   );
