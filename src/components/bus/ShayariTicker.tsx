@@ -51,7 +51,7 @@ export function ShayariTicker() {
   }, [phase, next]);
 
   const base =
-    "font-display text-[12px] sm:text-[15px] leading-relaxed tracking-wide text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.55)] transition-all duration-700 ease-in-out";
+    "font-display text-[12px] sm:text-[15px] leading-relaxed tracking-wide text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.55)] transition-all duration-700 ease-in-out whitespace-pre-line";
 
   return (
     <div
