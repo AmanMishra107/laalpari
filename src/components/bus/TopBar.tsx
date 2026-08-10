@@ -5,10 +5,14 @@ export function TopBar({
   clock,
   connected,
   onConnect,
+  playlistOpen,
+  onTogglePlaylist,
 }: {
   clock: string;
   connected: boolean;
   onConnect: () => void;
+  playlistOpen: boolean;
+  onTogglePlaylist: () => void;
 }) {
   const travelling = useLiveViewers();
 
