@@ -56,7 +56,7 @@ export function ShayariTicker() {
   return (
     <div
       aria-live="polite"
-      className="relative mx-auto h-16 w-full max-w-lg px-2 text-center sm:h-14 sm:px-6"
+      className="relative mx-auto h-28 w-full max-w-lg px-2 text-center sm:h-24 sm:px-6"
     >
       <p
         className={`absolute inset-x-2 top-0 sm:inset-x-6 ${base} ${
