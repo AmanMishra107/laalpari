@@ -326,6 +326,7 @@ function Index() {
             onPrev={goPrev}
             onSeek={(ms) => (usePremium ? void s.seek?.(ms) : embed.seek(Math.floor(ms / 1000)))}
             message={j.moving ? "CHANGING RADIO…" : !playerReady ? "TUNING THE RADIO…" : s.message}
+            previewHint={isPreview ? "30-sec preview" : null}
           />
 
           <RouteBoard
