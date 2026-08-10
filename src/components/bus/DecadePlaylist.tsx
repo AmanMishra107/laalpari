@@ -1,4 +1,5 @@
 import type { Decade } from "@/data/decades";
+import { Play } from "lucide-react";
 
 export function DecadePlaylist({
   decade,
@@ -29,23 +30,35 @@ export function DecadePlaylist({
 
               <button
                 onClick={() => onSelect(i)}
-                className="group flex w-full items-baseline gap-2 rounded-sm px-1 py-[3px] text-left transition-colors hover:bg-ink/5"
+                className="group flex w-full items-center gap-2 rounded-md px-1.5 py-[5px] text-left transition-all duration-200 hover:bg-white/25 active:scale-[0.99]"
               >
-                <span className="shrink-0 font-mono text-[10px] tabular-nums text-ink/40">
+                <span
+                  className={`shrink-0 min-w-[1.1rem] font-mono text-[10px] tabular-nums transition-colors ${
+                    active ? "text-lalpari" : "text-ink/40 group-hover:text-lalpari/80"
+                  }`}
+                >
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span
-                  className={`min-w-0 flex-1 truncate text-[12px] leading-tight ${
-                    active ? "text-lalpari" : "text-ink/85"
+                  className={`min-w-0 flex-1 truncate text-[12px] leading-tight transition-colors ${
+                    active ? "font-medium text-lalpari" : "text-ink/80 group-hover:text-ink"
                   }`}
                 >
                   {t.title}
                 </span>
-                <span className="hidden max-w-[40%] truncate font-mono text-[10px] text-ink/45 sm:inline">
+                <span className="hidden max-w-[38%] truncate font-mono text-[10px] text-ink/40 sm:inline">
                   {t.artist}
                 </span>
-                <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.2em] text-lalpari opacity-0 transition-opacity group-hover:opacity-100">
-                  ▶
+                <span
+                  className={`ml-1 flex shrink-0 items-center justify-center transition-all duration-200 ${
+                    active ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                  }`}
+                >
+                  <Play
+                    className={`size-3 fill-current ${
+                      active ? "text-lalpari" : "text-ink/50"
+                    }`}
+                  />
                 </span>
               </button>
             </li>
@@ -55,4 +68,3 @@ export function DecadePlaylist({
     </div>
   );
 }
-
