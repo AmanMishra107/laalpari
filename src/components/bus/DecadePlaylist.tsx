@@ -4,7 +4,7 @@ export function DecadePlaylist({
   decade,
   onSelect,
   activeTitle,
-  connected,
+
   tracks,
   activeIndex,
 }: {
