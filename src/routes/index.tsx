@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPlaylistTracks, getTrackArtwork } from "@/lib/playlist.functions";
 
-import heroBus from "@/assets/hero-bus.png.asset.json";
+// hero image served from /public/hero-bus.jpg
 import { getDecade } from "@/data/decades";
 import { stops } from "@/data/journey";
 import { useJourney } from "@/hooks/useJourney";
@@ -22,7 +22,7 @@ import { useSpotifyEmbed } from "@/lib/spotify/useEmbed";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "BUS.WTF — Pune → Satara, Seven Decades" },
+      { title: "LaalPari--Radio" },
       {
         name: "description",
         content:
@@ -208,9 +208,9 @@ function Index() {
   return (
     <main className="relative h-dvh w-screen overflow-hidden bg-cream">
       {/* Static hand-painted hero scene */}
-      <div className="paper-grain absolute inset-0">
+      <div className="absolute inset-0">
         <img
-          src={heroBus.url}
+          src="/hero-bus.jpg"
           alt="A young man with earphones at the window seat of a red Maharashtra ST bus at sunset"
           className="absolute inset-0 size-full object-cover"
         />
@@ -228,7 +228,8 @@ function Index() {
         </h1>
       </div>
 
-      {!j.moving && <FoundMemories stop={j.stop} />}
+
+
 
 
 
@@ -243,8 +244,6 @@ function Index() {
         <header className="-mx-3 -mt-2 sm:-mx-8">
           <TopBar
             clock={clock}
-            connected={s.connected}
-            onConnect={s.connected ? s.disconnect : s.connect}
             playlistOpen={showPlaylist}
             onTogglePlaylist={() => setShowPlaylist((v) => !v)}
           />
@@ -270,9 +269,8 @@ function Index() {
                     <button
                       key={d}
                       onClick={() => setDecadeId(d)}
-                      className={`rounded-full px-2 py-[2px] font-mono text-[9px] uppercase tracking-[0.2em] ${
-                        d === decadeId ? "bg-white/25 text-white" : "text-white/60 hover:text-white"
-                      }`}
+                      className={`rounded-full px-2 py-[2px] font-mono text-[9px] uppercase tracking-[0.2em] ${d === decadeId ? "bg-white/25 text-white" : "text-white/60 hover:text-white"
+                        }`}
                     >
                       {d}
                     </button>
@@ -294,10 +292,10 @@ function Index() {
                 ? s.track
                 : current
                   ? ({
-                      name: current.title,
-                      artists: current.artist,
-                      artwork: artwork ?? null,
-                    } as never)
+                    name: current.title,
+                    artists: current.artist,
+                    artwork: artwork ?? null,
+                  } as never)
                   : s.track
             }
             fallbackTitle={first.title}
