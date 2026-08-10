@@ -13,28 +13,54 @@ const shayaris = [
   "दिल तोड़ कर जाने वाले, कभी मोहब्बत का मतलब समझ पाओगे जब तुम्हें भी कोई यूँ ही छोड़ जाएगा।",
 ];
 
+const TRANSITION_MS = 700;
+const DISPLAY_MS = 15000;
+
 export function ShayariTicker() {
-  const [index, setIndex] = useState(0);
+  const [current, setCurrent] = useState(0);
+  const [next, setNext] = useState(1);
+  const [phase, setPhase] = useState<"hold" | "exit">("hold");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     const interval = window.setInterval(() => {
-      setIndex((i) => (i + 1) % shayaris.length);
-    }, 15000);
+      setPhase("exit");
+    }, DISPLAY_MS);
     return () => window.clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (phase !== "exit") return;
+    const timer = window.setTimeout(() => {
+      setCurrent(next);
+      setNext((n) => (n + 1) % shayaris.length);
+      setPhase("hold");
+    }, TRANSITION_MS);
+    return () => window.clearTimeout(timer);
+  }, [phase, next]);
+
+  const base =
+    "font-display text-[15px] leading-relaxed tracking-wide text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.55)] transition-all duration-700 ease-in-out";
 
   return (
     <div
       aria-live="polite"
-      className="mx-auto w-full max-w-lg px-6 text-center"
+      className="relative mx-auto h-14 w-full max-w-lg px-6 text-center"
     >
       <p
-        key={index}
-        className={`font-display text-[15px] leading-relaxed tracking-wide text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.55)] transition-opacity duration-700 ease-in-out ${mounted ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-x-6 top-0 ${base} ${
+          mounted && phase === "hold" ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
+        }`}
       >
-        {shayaris[index]}
+        {shayaris[current]}
+      </p>
+      <p
+        className={`absolute inset-x-6 top-0 ${base} ${
+          mounted && phase === "exit" ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+        }`}
+      >
+        {shayaris[next]}
       </p>
     </div>
   );
