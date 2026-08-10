@@ -1,11 +1,10 @@
 import type { Decade } from "@/data/decades";
-import { searchUrl } from "@/lib/spotify/api";
 
 export function DecadePlaylist({
   decade,
   onSelect,
   activeTitle,
-  connected,
+
   tracks,
   activeIndex,
 }: {
@@ -53,19 +52,6 @@ export function DecadePlaylist({
           );
         })}
       </ul>
-      {decade.playlistId ? null : (
-
-        !connected && (
-          <a
-            href={searchUrl(decade.tracks[0]!.title, decade.tracks[0]!.artist)}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-2 inline-block font-mono text-[9px] uppercase tracking-[0.24em] text-ink/45 underline-offset-4 hover:text-ink hover:underline"
-          >
-            Open in Spotify
-          </a>
-        )
-      )}
     </div>
   );
 }
