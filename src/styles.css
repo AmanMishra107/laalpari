@@ -342,3 +342,14 @@
   from { transform: scale(0.7); opacity: 0.4; }
   to { transform: scale(1); opacity: 1; }
 }
+
+@keyframes shayari-fade {
+  0% { opacity: 0; transform: translateY(6px); }
+  12% { opacity: 1; transform: translateY(0); }
+  88% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-6px); }
+}
+
+@utility shayari-line {
+  animation: shayari-fade 15s ease-in-out infinite;
+}
