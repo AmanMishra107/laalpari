@@ -242,13 +242,13 @@ function Index() {
 
       {/* Poster UI */}
       <div
-        className="relative z-30 grid h-dvh grid-rows-[auto_1fr_auto] px-5 pb-4 sm:px-8 sm:pb-6"
+        className="relative z-30 grid h-dvh grid-rows-[auto_1fr_auto] px-3 pb-4 sm:px-8 sm:pb-6"
         style={{
           paddingTop: "max(0.5rem, env(safe-area-inset-top))",
           paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
         }}
       >
-        <header className="-mx-5 -mt-2 sm:-mx-8">
+        <header className="-mx-3 -mt-2 sm:-mx-8">
           <TopBar
             clock={clock}
             connected={s.connected}
@@ -258,8 +258,8 @@ function Index() {
 
 
         {/* Middle */}
-        <div className="relative flex items-center justify-end">
-          <div className="max-w-[19rem] rounded-lg bg-cream/70 p-3 backdrop-blur-[2px]">
+        <div className="relative flex min-h-0 items-center justify-center sm:justify-end">
+          <div className="max-h-full w-full max-w-[19rem] overflow-y-auto rounded-lg bg-cream/70 p-3 backdrop-blur-[2px]">
             <DecadePlaylist
               decade={decade}
               tracks={queue}
@@ -288,7 +288,7 @@ function Index() {
         </div>
 
         {/* Bottom */}
-        <footer className="mx-auto flex w-full max-w-lg flex-col items-stretch gap-4">
+        <footer className="mx-auto flex w-full max-w-lg flex-col items-stretch gap-3 sm:gap-4">
           <ShayariTicker />
           <SpotifyPlayer
             track={
