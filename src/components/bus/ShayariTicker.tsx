@@ -23,8 +23,8 @@ const shayaris = [
   "मोहब्बत में नहीं है फ़र्क़ जीने और मरने का,\nउसी को देखकर जीते हैं जिस काफ़िर पे दम निकले। — मिर्ज़ा ग़ालिब",
 ];
 
-const TRANSITION_MS = 700;
-const DISPLAY_MS = 15000;
+const TRANSITION_MS = 1000;
+const DISPLAY_MS = 20000;
 
 export function ShayariTicker() {
   const [current, setCurrent] = useState(0);
