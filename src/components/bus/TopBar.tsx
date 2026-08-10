@@ -13,23 +13,25 @@ export function TopBar({
   const travelling = useLiveViewers();
 
   return (
-    <div className="flex h-9 w-full items-center gap-4 px-4">
-      <span className="shrink-0 font-mono text-[11px] font-medium tabular-nums text-white/90">
+    <div className="flex h-9 w-full items-center gap-2 px-3 sm:gap-4 sm:px-4">
+      <span className="shrink-0 font-mono text-[10px] font-medium tabular-nums text-white/90 sm:text-[11px]">
         {clock}
       </span>
 
-      <div className="flex flex-1 items-center justify-center gap-2">
+      <div className="flex min-w-0 flex-1 items-center justify-center gap-1.5 sm:gap-2">
         <span
-          className="size-2 rounded-full bg-[oklch(0.78_0.19_145)] shadow-[0_0_8px_2px_oklch(0.78_0.19_145/0.55)]"
+          className="size-2 shrink-0 rounded-full bg-[oklch(0.78_0.19_145)] shadow-[0_0_8px_2px_oklch(0.78_0.19_145/0.55)]"
           aria-hidden
         />
-        <span className="text-[12px] font-semibold text-white tabular-nums">{travelling}</span>
-        <span className="text-[12px] text-white/70">travelling</span>
+        <span className="text-[11px] font-semibold text-white tabular-nums sm:text-[12px]">
+          {travelling}
+        </span>
+        <span className="truncate text-[11px] text-white/70 sm:text-[12px]">travelling</span>
       </div>
 
       <button
         onClick={onConnect}
-        className="flex shrink-0 items-center gap-1.5 text-[12px] text-white/85 transition-colors hover:text-white"
+        className="flex shrink-0 items-center gap-1 text-[11px] text-white/85 transition-colors hover:text-white sm:gap-1.5 sm:text-[12px]"
       >
         <svg
           className="size-4"

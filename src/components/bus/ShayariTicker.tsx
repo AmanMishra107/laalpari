@@ -41,22 +41,22 @@ export function ShayariTicker() {
   }, [phase, next]);
 
   const base =
-    "font-display text-[15px] leading-relaxed tracking-wide text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.55)] transition-all duration-700 ease-in-out";
+    "font-display text-[12px] sm:text-[15px] leading-relaxed tracking-wide text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.55)] transition-all duration-700 ease-in-out";
 
   return (
     <div
       aria-live="polite"
-      className="relative mx-auto h-14 w-full max-w-lg px-6 text-center"
+      className="relative mx-auto h-16 w-full max-w-lg px-2 text-center sm:h-14 sm:px-6"
     >
       <p
-        className={`absolute inset-x-6 top-0 ${base} ${
+        className={`absolute inset-x-2 top-0 sm:inset-x-6 ${base} ${
           mounted && phase === "hold" ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
         }`}
       >
         {shayaris[current]}
       </p>
       <p
-        className={`absolute inset-x-6 top-0 ${base} ${
+        className={`absolute inset-x-2 top-0 sm:inset-x-6 ${base} ${
           mounted && phase === "exit" ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
         }`}
       >

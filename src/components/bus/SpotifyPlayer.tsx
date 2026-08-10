@@ -58,10 +58,10 @@ export function SpotifyPlayer({
   return (
     <section
       aria-label="Window seat radio player"
-      className="player-glass flex w-full items-center gap-4 rounded-full py-2.5 pl-2.5 pr-6"
+      className="player-glass flex w-full items-center gap-3 rounded-full py-2 pl-2 pr-3 sm:gap-4 sm:py-2.5 sm:pl-2.5 sm:pr-6"
     >
       {/* vinyl disc */}
-      <div className="relative size-[68px] shrink-0">
+      <div className="relative size-[52px] shrink-0 sm:size-[68px]">
         <div
           className="size-full overflow-hidden rounded-full border border-white/15 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.8)] animate-[spin_9s_linear_infinite]"
           style={{ animationPlayState: isPlaying ? "running" : "paused" }}
@@ -89,10 +89,10 @@ export function SpotifyPlayer({
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="truncate text-[15px] font-semibold leading-tight text-white transition-opacity duration-300">
+        <p className="truncate text-[13px] font-semibold leading-tight text-white transition-opacity duration-300 sm:text-[15px]">
           {track?.name ?? fallbackTitle}
         </p>
-        <p className="mt-0.5 truncate text-[12px] leading-tight text-white/60">
+        <p className="mt-0.5 truncate text-[11px] leading-tight text-white/60 sm:text-[12px]">
           {track?.artists ?? fallbackArtist}
         </p>
 
@@ -142,7 +142,7 @@ export function SpotifyPlayer({
         </p>
       </div>
 
-      <div className="flex shrink-0 items-center gap-3">
+      <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
         <button
           onClick={onPrev}
           disabled={disabled}
@@ -156,7 +156,7 @@ export function SpotifyPlayer({
           onClick={onToggle}
           disabled={disabled}
           aria-label={isPlaying ? "Pause" : "Play"}
-          className="grid size-11 place-items-center rounded-full bg-white text-black shadow-[0_6px_18px_-8px_rgba(0,0,0,0.9)] transition duration-150 ease-out hover:scale-105 active:scale-95 disabled:opacity-60"
+          className="grid size-9 place-items-center rounded-full bg-white text-black shadow-[0_6px_18px_-8px_rgba(0,0,0,0.9)] transition duration-150 ease-out hover:scale-105 active:scale-95 disabled:opacity-60 sm:size-11"
         >
           {isPlaying ? (
             <Pause className="size-4 animate-[scale-in_160ms_ease-out] fill-current" />

@@ -13,9 +13,9 @@ export function RouteBoard({
   const progress = (nextIndex ?? index) / (stops.length - 1);
 
   return (
-    <div className="flex w-full flex-col gap-2 px-4 py-3">
+    <div className="flex w-full flex-col gap-2 px-1 py-2 sm:px-4 sm:py-3">
       <div className="flex items-center justify-center gap-2">
-        <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/70">
+        <span className="text-center font-mono text-[8px] uppercase tracking-[0.2em] text-white/70 sm:text-[9px] sm:tracking-[0.3em]">
           गाण्यांचा प्रवास · Radio Years
         </span>
       </div>
@@ -50,10 +50,10 @@ export function RouteBoard({
               key={s.id}
               onClick={() => onSelect(i)}
               aria-current={active ? "step" : undefined}
-              className="group relative z-10 flex flex-1 flex-col items-center gap-1"
+              className="group relative z-10 flex min-w-0 flex-1 flex-col items-center gap-1"
             >
               <span
-                className={`size-[11px] rounded-full border transition-all duration-500 ${
+                className={`size-[11px] shrink-0 rounded-full border transition-all duration-500 ${
                   active
                     ? "scale-125 border-ink bg-ink"
                     : done
@@ -62,14 +62,14 @@ export function RouteBoard({
                 } ${target ? "on-air-dot border-ink" : ""}`}
               />
               <span
-                className={`font-mono text-[8px] uppercase tracking-[0.16em] transition-colors sm:text-[9px] ${
+                className={`max-w-full truncate px-0.5 font-mono text-[7px] uppercase tracking-[0.1em] transition-colors sm:text-[9px] sm:tracking-[0.16em] ${
                   active ? "text-ink" : done ? "text-ink/55" : "text-ink/35"
                 } group-hover:text-ink`}
               >
                 {s.name}
               </span>
               <span
-                className={`font-mono text-[8px] tracking-[0.14em] ${
+                className={`max-w-full truncate font-mono text-[7px] tracking-[0.1em] sm:text-[8px] sm:tracking-[0.14em] ${
                   active ? "text-ink/70" : "text-ink/30"
                 }`}
               >
