@@ -210,35 +210,33 @@ function Index() {
 
   return (
     <main className="relative h-dvh w-screen overflow-hidden bg-cream">
-      {/* Scene: one hand-painted era per stop, cross-fading seamlessly */}
+      {/* Static hand-painted hero scene */}
       <div className="paper-grain absolute inset-0">
-        {eraScenes.map((scene, i) => (
-          <img
-            key={scene.url}
-            src={scene.url}
-            alt={scene.alt}
-            loading={i === 0 ? "eager" : "lazy"}
-            className="absolute inset-0 size-full object-cover transition-opacity duration-[1600ms] ease-in-out will-change-[opacity]"
-            style={{ opacity: i === sceneIndex ? 1 : 0 }}
-          />
-        ))}
-
-        {/* era colour wash — the world changes, the bus doesn't */}
-        <div
-          className="pointer-events-none absolute inset-0 transition-all duration-[1600ms] mix-blend-multiply"
-          style={{
-            background: `linear-gradient(to bottom, ${j.stop.palette.skyTop}, ${j.stop.palette.glow})`,
-            opacity: j.stop.weather === "night" ? 0.3 : 0.1,
-          }}
+        <img
+          src={heroBus.url}
+          alt="A young man with earphones at the window seat of a red Maharashtra ST bus at sunset"
+          className="absolute inset-0 size-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-cream/40 via-transparent to-cream/55 md:from-cream/25 md:to-cream/30" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/60" />
       </div>
 
+      {/* Title — kept to the left so it never covers the passenger */}
+      <div className="pointer-events-none absolute left-3 top-[16%] z-30 sm:left-8 sm:top-[18%]">
+        <h1
+          className="font-marathi text-[clamp(2rem,5.5vw,4rem)] leading-none text-sun [text-shadow:0_4px_18px_rgba(0,0,0,0.75)]"
+          style={{ fontFamily: "var(--font-marathi)" }}
+        >
+          लालपरी
+        </h1>
+        <p className="mt-1 font-mono text-[8px] uppercase tracking-[0.34em] text-white/70 sm:text-[10px]">
+          Pune → Satara
+        </p>
+      </div>
 
-      <ConductorCall text={j.announce} />
       {!j.moving && <FoundMemories stop={j.stop} />}
 
       {j.phase === "intro" && <JourneyIntro onDepart={j.depart} />}
+
 
       {/* Poster UI */}
       <div
