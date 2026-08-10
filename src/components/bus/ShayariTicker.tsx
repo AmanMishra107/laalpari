@@ -57,11 +57,12 @@ export function ShayariTicker() {
       className="mx-auto flex h-24 w-full max-w-lg items-center justify-center px-2 text-center sm:h-24 sm:px-6"
     >
       <p
-        className="font-display whitespace-pre-line text-[11px] leading-relaxed tracking-wide text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.55)] will-change-[opacity,transform] sm:text-[15px]"
+        className="font-display whitespace-pre-line text-[11px] font-medium leading-relaxed tracking-wide text-white will-change-[opacity,transform] sm:text-[15px]"
         style={{
           opacity: visible ? 1 : 0,
           transform: visible ? "translateY(0px)" : "translateY(4px)",
           transition: `opacity ${FADE_MS}ms cubic-bezier(0.33,1,0.68,1), transform ${FADE_MS}ms cubic-bezier(0.33,1,0.68,1)`,
+          textShadow: "0 1px 2px rgba(0,0,0,0.85), 0 3px 10px rgba(0,0,0,0.65), 0 0 24px rgba(0,0,0,0.45)",
         }}
       >
         {shayaris[index]}
