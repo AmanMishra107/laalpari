@@ -283,8 +283,7 @@ function Index() {
           )}
         </div>
 
-          )}
-        </div>
+
 
         {/* Bottom */}
         <footer className="mx-auto flex w-full max-w-lg flex-col items-stretch gap-3 sm:gap-4">
