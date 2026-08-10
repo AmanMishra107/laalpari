@@ -218,7 +218,7 @@ function Index() {
       </div>
 
       {/* Title — centred at the top */}
-      <div className="pointer-events-none absolute left-1/2 top-[15%] z-30 -translate-x-1/2 text-center sm:top-[17%]">
+      <div className="pointer-events-none absolute left-1/2 top-[12%] z-30 -translate-x-1/2 text-center sm:top-[14%]">
         <h1
           className="font-marathi text-[clamp(4.4rem,13vw,10rem)] leading-none text-sun [text-shadow:0_4px_22px_rgba(0,0,0,0.8)]"
 
