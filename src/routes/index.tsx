@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPlaylistTracks, getTrackArtwork } from "@/lib/playlist.functions";
 
-import { eraScenes } from "@/data/eraScenes";
+import heroBus from "@/assets/hero-bus.png.asset.json";
 import { getDecade } from "@/data/decades";
 import { stops } from "@/data/journey";
 import { useJourney } from "@/hooks/useJourney";
@@ -12,7 +12,7 @@ import { RouteBoard } from "@/components/bus/RouteBoard";
 import { TopBar } from "@/components/bus/TopBar";
 
 
-import { ConductorCall } from "@/components/bus/ConductorCall";
+
 import { FoundMemories } from "@/components/bus/FoundMemories";
 import { DecadePlaylist } from "@/components/bus/DecadePlaylist";
 import { SpotifyPlayer } from "@/components/bus/SpotifyPlayer";
