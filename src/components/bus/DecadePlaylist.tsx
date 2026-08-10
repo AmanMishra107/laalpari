@@ -21,10 +21,7 @@ export function DecadePlaylist({
   const window = list.slice(start, start + 6);
   return (
     <div key={decade.id} className="animate-in fade-in duration-500">
-      <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-ink/50">
-        {decade.title} — {decade.subtitle}
-      </p>
-      <ul className="mt-2 space-y-0.5">
+      <ul className="space-y-0.5">
         {window.map((t, wi) => {
           const i = start + wi;
           const active = activeIndex != null ? activeIndex === i : activeTitle === t.title;
