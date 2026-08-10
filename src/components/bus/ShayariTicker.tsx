@@ -54,10 +54,10 @@ export function ShayariTicker() {
   return (
     <div
       aria-live="polite"
-      className="mx-auto flex h-24 w-full max-w-lg items-center justify-center px-2 text-center sm:h-24 sm:px-6"
+      className="mx-auto flex h-28 w-full max-w-lg items-center justify-center px-3 text-center sm:h-24 sm:px-6"
     >
       <p
-        className="font-display whitespace-pre-line text-[11px] font-medium leading-relaxed tracking-wide text-white will-change-[opacity,transform] sm:text-[15px]"
+        className="font-display whitespace-pre-line text-[13px] font-medium leading-relaxed tracking-wide text-white will-change-[opacity,transform] sm:text-[15px]"
         style={{
           opacity: visible ? 1 : 0,
           transform: visible ? "translateY(0px)" : "translateY(4px)",
