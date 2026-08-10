@@ -21,7 +21,6 @@ export function SpotifyPlayer({
   onSeek,
 
   message,
-  previewHint,
   embedRef,
   embedActive,
   embedLoaded,
@@ -39,7 +38,6 @@ export function SpotifyPlayer({
   onSeek?: (ms: number) => void;
 
   message: string | null;
-  previewHint?: string | null;
   embedRef?: React.RefObject<HTMLDivElement | null>;
   embedActive?: boolean;
   embedLoaded?: boolean;
@@ -138,14 +136,9 @@ export function SpotifyPlayer({
           />
         </div>
 
-        <p className="mt-1 flex items-center gap-2 font-mono text-[10px] tabular-nums text-white/55">
-          <span>{fmt(shown)} / {fmt(duration)}</span>
-          {previewHint && (
-            <span className="rounded-full bg-sun/22 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-sun">
-              {previewHint}
-            </span>
-          )}
-          {message && <span className="uppercase tracking-[0.16em]">{message}</span>}
+        <p className="mt-1 font-mono text-[10px] tabular-nums text-white/55">
+          {fmt(shown)} / {fmt(duration)}
+          {message && <span className="ml-2 uppercase tracking-[0.16em]">{message}</span>}
         </p>
       </div>
 
