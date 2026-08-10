@@ -203,6 +203,9 @@ function Index() {
   // unlock. `prepare` has already issued loadUri for track 1 at this point.
   const playerReady = usePremium || (queueReady && Boolean(queue[0]) && embed.ready);
 
+  // Spotify embed serves 30-second previews to listeners who aren't signed in
+  // (common on mobile). Show a small hint so the silence after 30s isn't confusing.
+  const isPreview = !usePremium && embed.duration > 0 && embed.duration <= 35000;
 
   // The scene we should be showing: while travelling, the next era fades in.
   const sceneIndex = j.moving && j.nextIndex != null ? j.nextIndex : j.index;
@@ -323,6 +326,7 @@ function Index() {
             onPrev={goPrev}
             onSeek={(ms) => (usePremium ? void s.seek?.(ms) : embed.seek(Math.floor(ms / 1000)))}
             message={j.moving ? "CHANGING RADIO…" : !playerReady ? "TUNING THE RADIO…" : s.message}
+            previewHint={isPreview ? "30-sec preview" : null}
           />
 
           <RouteBoard
