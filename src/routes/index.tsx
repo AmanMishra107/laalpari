@@ -46,6 +46,7 @@ function Index() {
   const s = useSpotify();
   const [decadeId, setDecadeId] = useState(stops[0]!.decadeIds[0]!);
   const [clock, setClock] = useState("06:15");
+  const [showPlaylist, setShowPlaylist] = useState(false);
   const decade = useMemo(() => getDecade(decadeId), [decadeId]);
   const queryClient = useQueryClient();
 
