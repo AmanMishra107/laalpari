@@ -205,9 +205,6 @@ function Index() {
   const playerReady = usePremium || (queueReady && Boolean(queue[0]) && embed.ready);
 
 
-  // The scene we should be showing: while travelling, the next era fades in.
-  const sceneIndex = j.moving && j.nextIndex != null ? j.nextIndex : j.index;
-
   return (
     <main className="relative h-dvh w-screen overflow-hidden bg-cream">
       {/* Static hand-painted hero scene */}
