@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ListMusic } from "lucide-react";
 import { useLiveViewers } from "@/hooks/useLiveViewers";
 
 export function TopBar({
