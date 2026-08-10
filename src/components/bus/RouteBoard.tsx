@@ -14,12 +14,6 @@ export function RouteBoard({
 
   return (
     <div className="flex w-full flex-col gap-2 px-1 py-2 sm:px-4 sm:py-3">
-      <div className="flex items-center justify-center gap-2">
-        <span className="text-center font-mono text-[8px] uppercase tracking-[0.2em] text-white/70 sm:text-[9px] sm:tracking-[0.3em]">
-          गाण्यांचा प्रवास · Radio Years
-        </span>
-      </div>
-
       <div className="relative flex items-start pt-5">
         {/* moving bus */}
         <div
