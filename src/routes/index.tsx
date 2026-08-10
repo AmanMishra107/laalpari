@@ -217,15 +217,15 @@ function Index() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/60" />
       </div>
 
-      {/* Title — kept to the left so it never covers the passenger */}
-      <div className="pointer-events-none absolute left-3 top-[16%] z-30 sm:left-8 sm:top-[18%]">
+      {/* Title — centred at the top */}
+      <div className="pointer-events-none absolute left-1/2 top-[5%] z-30 -translate-x-1/2 text-center sm:top-[6%]">
         <h1
-          className="font-marathi text-[clamp(2rem,5.5vw,4rem)] leading-none text-sun [text-shadow:0_4px_18px_rgba(0,0,0,0.75)]"
+          className="font-marathi text-[clamp(2.6rem,7vw,5.5rem)] leading-none text-sun [text-shadow:0_4px_18px_rgba(0,0,0,0.75)]"
           style={{ fontFamily: "var(--font-marathi)" }}
         >
           लालपरी
         </h1>
-        <p className="mt-1 font-mono text-[8px] uppercase tracking-[0.34em] text-white/70 sm:text-[10px]">
+        <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.34em] text-white/70 sm:text-[11px]">
           Pune → Satara
         </p>
       </div>
