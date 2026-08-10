@@ -252,9 +252,9 @@ function Index() {
 
 
         {/* Middle */}
-        <div className="relative flex min-h-0 items-center justify-end">
+        <div className="relative flex min-h-0 items-start justify-end pt-1">
           {showPlaylist && (
-            <div className="max-h-full w-full max-w-[18rem] overflow-hidden rounded-2xl border border-white/25 bg-cream/35 p-2.5 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.55)] backdrop-blur-2xl sm:max-w-[20rem] sm:p-3">
+            <div className="animate-in fade-in slide-in-from-top-2 max-h-full w-[15rem] overflow-y-auto rounded-2xl border border-white/20 bg-white/5 p-2 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.6)] backdrop-blur-xl duration-300 sm:w-[19rem] sm:p-3">
               <DecadePlaylist
                 decade={decade}
                 tracks={queue}
@@ -271,7 +271,7 @@ function Index() {
                       key={d}
                       onClick={() => setDecadeId(d)}
                       className={`rounded-full px-2 py-[2px] font-mono text-[9px] uppercase tracking-[0.2em] ${
-                        d === decadeId ? "bg-ink/85 text-cream" : "text-ink/60 hover:text-ink"
+                        d === decadeId ? "bg-white/25 text-white" : "text-white/60 hover:text-white"
                       }`}
                     >
                       {d}
@@ -280,6 +280,9 @@ function Index() {
                 </div>
               )}
             </div>
+          )}
+        </div>
+
           )}
         </div>
 
