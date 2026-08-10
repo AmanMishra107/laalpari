@@ -46,6 +46,7 @@ function Index() {
   const s = useSpotify();
   const [decadeId, setDecadeId] = useState(stops[0]!.decadeIds[0]!);
   const [clock, setClock] = useState("06:15");
+  const [showPlaylist, setShowPlaylist] = useState(false);
   const decade = useMemo(() => getDecade(decadeId), [decadeId]);
   const queryClient = useQueryClient();
 
@@ -243,38 +244,42 @@ function Index() {
             clock={clock}
             connected={s.connected}
             onConnect={s.connected ? s.disconnect : s.connect}
+            playlistOpen={showPlaylist}
+            onTogglePlaylist={() => setShowPlaylist((v) => !v)}
           />
         </header>
 
 
         {/* Middle */}
-        <div className="relative flex min-h-0 items-center justify-center sm:justify-end">
-          <div className="max-h-full w-full max-w-[19rem] overflow-y-auto rounded-lg bg-cream/70 p-3 backdrop-blur-[2px]">
-            <DecadePlaylist
-              decade={decade}
-              tracks={queue}
-              activeIndex={queueIndex}
-              onSelect={(i) => void playIndex(i)}
-              activeTitle={s.track?.name ?? null}
-              connected={s.connected}
-            />
+        <div className="relative flex min-h-0 items-center justify-end">
+          {showPlaylist && (
+            <div className="max-h-full w-full max-w-[18rem] overflow-hidden rounded-2xl border border-white/25 bg-cream/35 p-2.5 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.55)] backdrop-blur-2xl sm:max-w-[20rem] sm:p-3">
+              <DecadePlaylist
+                decade={decade}
+                tracks={queue}
+                activeIndex={queueIndex}
+                onSelect={(i) => void playIndex(i)}
+                activeTitle={s.track?.name ?? null}
+                connected={s.connected}
+              />
 
-            {j.stop.decadeIds.length > 1 && (
-              <div className="mt-2 flex gap-1">
-                {j.stop.decadeIds.map((d) => (
-                  <button
-                    key={d}
-                    onClick={() => setDecadeId(d)}
-                    className={`rounded-full px-2 py-[2px] font-mono text-[9px] uppercase tracking-[0.2em] ${
-                      d === decadeId ? "bg-ink text-cream" : "text-ink/50 hover:text-ink"
-                    }`}
-                  >
-                    {d}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+              {j.stop.decadeIds.length > 1 && (
+                <div className="mt-2 flex gap-1">
+                  {j.stop.decadeIds.map((d) => (
+                    <button
+                      key={d}
+                      onClick={() => setDecadeId(d)}
+                      className={`rounded-full px-2 py-[2px] font-mono text-[9px] uppercase tracking-[0.2em] ${
+                        d === decadeId ? "bg-ink/85 text-cream" : "text-ink/60 hover:text-ink"
+                      }`}
+                    >
+                      {d}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Bottom */}
