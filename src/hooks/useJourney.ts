@@ -11,7 +11,7 @@ const TIMING: Record<Exclude<Phase, "intro" | "resting">, number> = {
 };
 
 export function useJourney() {
-  const [phase, setPhase] = useState<Phase>("intro");
+  const [phase, setPhase] = useState<Phase>("resting");
   const [index, setIndex] = useState(0);
   /** stop we are driving toward, null while resting */
   const [nextIndex, setNextIndex] = useState<number | null>(null);
