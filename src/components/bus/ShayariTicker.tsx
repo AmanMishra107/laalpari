@@ -51,7 +51,7 @@ export function ShayariTicker() {
   }, [phase, next]);
 
   const base =
-    "font-display text-[12px] sm:text-[15px] leading-relaxed tracking-wide text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.55)] transition-all duration-700 ease-in-out whitespace-pre-line";
+    "font-display text-[12px] sm:text-[15px] leading-relaxed tracking-wide text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.55)] transition-opacity duration-1000 ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[opacity] whitespace-pre-line";
 
   return (
     <div
@@ -60,14 +60,14 @@ export function ShayariTicker() {
     >
       <p
         className={`absolute inset-x-2 top-0 sm:inset-x-6 ${base} ${
-          mounted && phase === "hold" ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
+          mounted && phase === "hold" ? "opacity-100" : "opacity-0"
         }`}
       >
         {shayaris[current]}
       </p>
       <p
         className={`absolute inset-x-2 top-0 sm:inset-x-6 ${base} ${
-          mounted && phase === "exit" ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+          mounted && phase === "exit" ? "opacity-100" : "opacity-0"
         }`}
       >
         {shayaris[next]}
