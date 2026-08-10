@@ -217,16 +217,13 @@ function Index() {
       </div>
 
       {/* Title — centred at the top */}
-      <div className="pointer-events-none absolute left-1/2 top-[5%] z-30 -translate-x-1/2 text-center sm:top-[6%]">
+      <div className="pointer-events-none absolute left-1/2 top-[9%] z-30 -translate-x-1/2 text-center sm:top-[10%]">
         <h1
-          className="font-marathi text-[clamp(2.6rem,7vw,5.5rem)] leading-none text-sun [text-shadow:0_4px_18px_rgba(0,0,0,0.75)]"
+          className="font-marathi text-[clamp(3.4rem,10vw,7.5rem)] leading-none text-sun [text-shadow:0_4px_22px_rgba(0,0,0,0.8)]"
           style={{ fontFamily: "var(--font-marathi)" }}
         >
           लालपरी
         </h1>
-        <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.34em] text-white/70 sm:text-[11px]">
-          Pune → Satara
-        </p>
       </div>
 
       {!j.moving && <FoundMemories stop={j.stop} />}
