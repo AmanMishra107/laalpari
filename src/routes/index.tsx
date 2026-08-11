@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getPlaylistTracks, getTrackArtwork } from "@/lib/playlist.functions";
+import { getPlaylistTracks, getTrackArtwork } from "@/lib/playlist.functions.ts";
 
-// hero image served from /public/hero-bus.jpg
+const heroBus = "/hero-bus.jpg";
 import { getDecade } from "@/data/decades";
 import { stops } from "@/data/journey";
 import { useJourney } from "@/hooks/useJourney";
@@ -12,17 +12,40 @@ import { TopBar } from "@/components/bus/TopBar";
 
 
 
-import { FoundMemories } from "@/components/bus/FoundMemories";
+
 import { DecadePlaylist } from "@/components/bus/DecadePlaylist";
 import { SpotifyPlayer } from "@/components/bus/SpotifyPlayer";
 import { ShayariTicker } from "@/components/bus/ShayariTicker";
 import { useSpotify } from "@/lib/spotify/useSpotify";
 import { useSpotifyEmbed } from "@/lib/spotify/useEmbed";
+import { useYouTube } from "@/lib/youtube/useYouTube";
+import { getYouTubePlaylist } from "@/lib/youtube/playlist.functions.ts";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "laalpari--radio" },
+      {
+        name: "description",
+        content:
+          "A Lal Pari time journey: ride an old Maharashtra ST bus from Pune to Satara through six stops and seven decades of Bollywood music.",
+      },
+      { property: "og:title", content: "laalpari--radio — The Lal Pari Time Journey" },
+      {
+        property: "og:description",
+        content:
+          "One journey. Six stops. Seven decades. Window seat. Old songs. Long route.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
+const EMPTY_YT: Awaited<ReturnType<typeof getYouTubePlaylist>> = [];
+const EMPTY_SPOTIFY: Awaited<ReturnType<typeof getPlaylistTracks>> = [];
 
 function Index() {
   const j = useJourney();
@@ -49,7 +72,7 @@ function Index() {
     };
 
     tick();
-    const t = setInterval(tick, 20000);
+    const t = setInterval(tick, 15000);
     return () => clearInterval(t);
   }, []);
 
@@ -57,22 +80,50 @@ function Index() {
   const queueIndexRef = useRef<number | null>(null);
   queueIndexRef.current = queueIndex;
 
-  const { data: fetchedQueue = [], isSuccess: queueReady } = useQuery({
+  // Spotify's web embed is capped at 30s previews on mobile, so eras that ship
+  // a YouTube playlist switch to YouTube as the mobile audio engine.
+  const isMobile = useIsMobile();
+  const ytPlaylistId = isMobile ? decade.youtubePlaylistId : undefined;
+  const ytActive = Boolean(ytPlaylistId);
+
+  const { data: ytQueue = EMPTY_YT, isSuccess: ytQueueReady } = useQuery({
+    queryKey: ["yt-playlist", ytPlaylistId],
+    queryFn: () => getYouTubePlaylist({ data: { playlistId: ytPlaylistId! } }),
+    enabled: ytActive,
+    staleTime: Infinity,
+  });
+
+  const { data: fetchedQueue = EMPTY_SPOTIFY, isSuccess: spotifyQueueReady } = useQuery({
     queryKey: ["playlist", decade.playlistId],
     queryFn: () => getPlaylistTracks({ data: { playlistId: decade.playlistId! } }),
-    enabled: Boolean(decade.playlistId),
+    enabled: Boolean(decade.playlistId) && !ytActive,
     staleTime: Infinity,
   });
   // Some eras drop their opening tracks (e.g. the 60s skips the first two).
   const queue = useMemo(
-    () => fetchedQueue.slice(decade.skipTracks ?? 0),
-    [fetchedQueue, decade.skipTracks],
+    () =>
+      ytActive
+        ? ytQueue.map((t) => ({
+          uri: t.videoId,
+          title: t.title,
+          artist: t.artist,
+          duration: t.duration,
+          artwork: t.artwork,
+        }))
+        : fetchedQueue
+          .slice(decade.skipTracks ?? 0)
+          .map((t) => ({ ...t, artwork: null as string | null })),
+    [ytActive, ytQueue, fetchedQueue, decade.skipTracks],
   );
+  const queueReady = ytActive ? ytQueueReady : spotifyQueueReady;
 
   const queueRef = useRef(queue);
   queueRef.current = queue;
 
   const embedLoadRef = useRef<((uri: string) => void) | null>(null);
+  const ytLoadRef = useRef<((id: string) => void) | null>(null);
+  const ytActiveRef = useRef(ytActive);
+  ytActiveRef.current = ytActive;
 
   const playQueueIndex = useCallback((i: number) => {
     const list = queueRef.current;
@@ -80,17 +131,25 @@ function Index() {
     const idx = ((i % list.length) + list.length) % list.length;
     setQueueIndex(idx);
     setStarted(true);
-    embedLoadRef.current?.(list[idx]!.uri);
+    if (ytActiveRef.current) ytLoadRef.current?.(list[idx]!.uri);
+    else embedLoadRef.current?.(list[idx]!.uri);
     return true;
   }, []);
 
 
 
   const embed = useSpotifyEmbed(() => {
-    if (queueIndexRef.current != null) playQueueIndex(queueIndexRef.current + 1);
+    if (!ytActiveRef.current && queueIndexRef.current != null)
+      playQueueIndex(queueIndexRef.current + 1);
   });
   embedLoadRef.current = embed.load;
-  const usePremium = s.connected && s.premium === true;
+
+  const yt = useYouTube(ytActive, () => {
+    if (queueIndexRef.current != null) playQueueIndex(queueIndexRef.current + 1);
+  });
+  ytLoadRef.current = yt.load;
+
+  const usePremium = s.connected && s.premium === true && !ytActive;
 
   // Has the user actually started this era's queue yet? Until then the play
   // button must kick off a real load (with retries) instead of toggling the
@@ -99,8 +158,19 @@ function Index() {
 
   // Prime the opening track before controls become available, and cache the
   // first two covers so track 1 and the first Next action need no extra fetch.
+  // Only once per era: re-running would re-cue and kill playback mid-song.
+  const primedFor = useRef<string | null>(null);
   useEffect(() => {
-    if (usePremium || !embed.ready || !queue[0]) return;
+    if (!queue[0] || primedFor.current === decade.id) return;
+    if (ytActive) {
+      if (!yt.ready) return;
+      primedFor.current = decade.id;
+      yt.prepare(queue[0].uri);
+      setQueueIndex(0);
+      return;
+    }
+    if (usePremium || !embed.ready) return;
+    primedFor.current = decade.id;
     embed.prepare(queue[0].uri);
     // Show the real first track in the player, not a hardcoded placeholder.
     setQueueIndex(0);
@@ -113,9 +183,12 @@ function Index() {
         }),
       ),
     );
-  }, [decade.id, embed.ready, queryClient, queue, usePremium]);
+  }, [decade.id, embed.ready, yt.ready, ytActive, queryClient, queue, usePremium]);
+
+
 
   useEffect(() => {
+    primedFor.current = null;
     setQueueIndex(null);
     setStarted(false);
   }, [decade.id]);
@@ -174,26 +247,30 @@ function Index() {
 
   const first = decade.tracks[0]!;
   const current = queueIndex != null ? (queue[queueIndex] ?? null) : null;
-  const { data: artwork = null } = useQuery({
+  const { data: spotifyArtwork = null } = useQuery({
     queryKey: ["artwork", current?.uri],
     queryFn: () => getTrackArtwork({ data: { uri: current!.uri } }),
-    enabled: Boolean(current?.uri),
+    enabled: Boolean(current?.uri) && !ytActive,
     staleTime: Infinity,
   });
+  const artwork = ytActive ? (current?.artwork ?? null) : spotifyArtwork;
 
 
   const isPlaying = s.status === "playing";
   // The controller is ready and the complete queue is cached before controls
   // unlock. `prepare` has already issued loadUri for track 1 at this point.
-  const playerReady = usePremium || (queueReady && Boolean(queue[0]) && embed.ready);
+  const playerReady = ytActive
+    ? queueReady && Boolean(queue[0]) && yt.ready
+    : usePremium || (queueReady && Boolean(queue[0]) && embed.ready);
+
 
 
   return (
     <main className="relative h-dvh w-screen overflow-hidden bg-cream">
       {/* Static hand-painted hero scene */}
-      <div className="absolute inset-0">
+      <div className="paper-grain absolute inset-0">
         <img
-          src="/hero-bus.jpg"
+          src={heroBus}
           alt="A young man with earphones at the window seat of a red Maharashtra ST bus at sunset"
           className="absolute inset-0 size-full object-cover"
         />
@@ -215,10 +292,9 @@ function Index() {
 
 
 
-
       {/* Poster UI */}
       <div
-        className="relative z-30 grid h-dvh grid-rows-[auto_1fr_auto] px-3 pb-4 sm:px-8 sm:pb-6"
+        className="relative z-30 grid h-dvh w-full grid-cols-[minmax(0,1fr)] grid-rows-[auto_1fr_auto] overflow-hidden px-3 pb-4 sm:px-8 sm:pb-6"
         style={{
           paddingTop: "max(0.5rem, env(safe-area-inset-top))",
           paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
@@ -227,6 +303,8 @@ function Index() {
         <header className="-mx-3 -mt-2 sm:-mx-8">
           <TopBar
             clock={clock}
+            connected={s.connected}
+            onConnect={s.connected ? s.disconnect : s.connect}
             playlistOpen={showPlaylist}
             onTogglePlaylist={() => setShowPlaylist((v) => !v)}
           />
@@ -267,7 +345,7 @@ function Index() {
 
 
         {/* Bottom */}
-        <footer className="mx-auto flex w-full max-w-lg flex-col items-stretch gap-3 sm:gap-4">
+        <footer className="mx-auto flex w-full min-w-0 max-w-lg flex-col items-stretch gap-3 overflow-hidden sm:gap-4">
           <ShayariTicker />
           <SpotifyPlayer
             track={
@@ -279,32 +357,51 @@ function Index() {
                     artists: current.artist,
                     artwork: artwork ?? null,
                   } as never)
-                  : s.track
+                  : null
             }
             fallbackTitle={first.title}
             fallbackArtist={first.artist}
-            isPlaying={usePremium ? isPlaying : embed.isPlaying}
-            progress={usePremium ? s.progress : embed.position}
-            duration={usePremium ? s.duration || 0 : embed.duration}
+            isPlaying={ytActive ? yt.isPlaying : usePremium ? isPlaying : embed.isPlaying}
+            progress={ytActive ? yt.position : usePremium ? s.progress : embed.position}
+            duration={ytActive ? yt.duration : usePremium ? s.duration || 0 : embed.duration}
             embedRef={embed.hostRef}
-            embedActive={!usePremium}
+            embedActive={!usePremium && !ytActive}
             embedLoaded={Boolean(embed.uri)}
             disabled={!playerReady}
             onToggle={() =>
-              usePremium
-                ? s.track
-                  ? void s.toggle()
-                  : void playIndex(0)
-                : started && embed.uri
-                  ? embed.toggle()
+              ytActive
+                ? started && yt.videoId
+                  ? yt.toggle()
                   : void playIndex(queueIndex ?? 0)
+                : usePremium
+                  ? s.track
+                    ? void s.toggle()
+                    : void playIndex(0)
+                  : started && embed.uri
+                    ? embed.toggle()
+                    : void playIndex(queueIndex ?? 0)
             }
 
             onNext={goNext}
             onPrev={goPrev}
-            onSeek={(ms) => (usePremium ? void s.seek?.(ms) : embed.seek(Math.floor(ms / 1000)))}
+            onSeek={(ms) =>
+              ytActive
+                ? yt.seek(Math.floor(ms / 1000))
+                : usePremium
+                  ? void s.seek?.(ms)
+                  : embed.seek(Math.floor(ms / 1000))
+            }
             message={j.moving ? "CHANGING RADIO…" : !playerReady ? "TUNING THE RADIO…" : s.message}
           />
+
+          {/* Hidden YouTube audio engine (mobile full-length playback) */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none fixed bottom-0 left-0 size-px overflow-hidden opacity-0"
+          >
+            <div ref={yt.hostRef} />
+          </div>
+
 
           <RouteBoard
             index={j.index}

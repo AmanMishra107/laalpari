@@ -16,8 +16,11 @@ export type Decade = {
   description: string;
   /** Optional Spotify playlist ID powering this decade. */
   playlistId?: string;
+  /** Optional YouTube playlist ID used as the mobile audio source (full-length playback). */
+  youtubePlaylistId?: string;
   /** Number of leading playlist tracks to skip. */
   skipTracks?: number;
+
   tracks: Track[];
 };
 
@@ -33,7 +36,9 @@ export const decades: Decade[] = [
     departure: "06:15",
     description: "Slow ghats, transistor radio, morning fog.",
     playlistId: "6mx7rVYF6ed2JTMegQ8SY0",
+    youtubePlaylistId: "PLgCV-sHZhmPKB66J63T3oKxNulUcEIIMb",
     skipTracks: 2,
+
 
     tracks: [
       { title: "Lag Ja Gale", artist: "Lata Mangeshkar" },
@@ -54,6 +59,7 @@ export const decades: Decade[] = [
     departure: "09:40",
     description: "Bell bottoms at the bus stand.",
     playlistId: "1arIwnl806bdxvrgTEuvLw",
+    youtubePlaylistId: "PLIsBPvbHF1X0rWWeN1nDP2mtKCIMlfDYn",
     tracks: [
       { title: "Dum Maro Dum", artist: "Asha Bhosle" },
       { title: "Mere Sapno Ki Rani", artist: "Kishore Kumar" },
@@ -66,6 +72,7 @@ export const decades: Decade[] = [
   {
     id: "80s",
     playlistId: "37i9dQZF1DX3NU3NvyoJUz",
+    youtubePlaylistId: "PLuPjnC6hcJA2ctQhXpZtjxWD0eS_lQXsO",
     label: "80s",
     title: "Chai Stop Classics",
     subtitle: "Cassette rewound with a pencil",
@@ -85,6 +92,7 @@ export const decades: Decade[] = [
   {
     id: "90s",
     playlistId: "2AVjI8Z57bqMJVtU3V9X1Q",
+    youtubePlaylistId: "PLTJ1PnzCWyFw",
     label: "90s",
     title: "Last Seat Legends",
     subtitle: "The window seat anthem era",
@@ -105,6 +113,7 @@ export const decades: Decade[] = [
   {
     id: "00s",
     playlistId: "6wVv6RynspgsuFVpzUigDu",
+    youtubePlaylistId: "PL71gzSkiT0QkByFoGuRrMfeWQhywnyGDO",
     label: "00s",
     title: "College Bus",
     subtitle: "Nokia ringtone nostalgia",
@@ -124,6 +133,7 @@ export const decades: Decade[] = [
   {
     id: "10s",
     playlistId: "37i9dQZF1DWVDvBpGQbzXj",
+    youtubePlaylistId: "PLWwWsW4aIOyc",
     label: "10s",
     title: "Window Seat Diaries",
     subtitle: "Headphones in, world out",
