@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
-@source "../src";
 @import "tw-animate-css";
+@source "../src";
+
 
 @custom-variant dark (&:is(.dark *));
 
@@ -167,6 +168,7 @@
 }
 
 @layer base {
+
   html,
   body {
     height: 100%;
@@ -182,6 +184,7 @@
 
 @utility paper-grain {
   position: relative;
+
   &::after {
     content: "";
     position: absolute;
@@ -217,8 +220,15 @@
 
 
 @keyframes bus-sway {
-  0%, 100% { transform: scale(1.045) translate3d(0, 0, 0); }
-  50% { transform: scale(1.045) translate3d(-0.6%, 0.5%, 0); }
+
+  0%,
+  100% {
+    transform: scale(1.045) translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: scale(1.045) translate3d(-0.6%, 0.5%, 0);
+  }
 }
 
 @utility scene-motion {
@@ -226,8 +236,15 @@
 }
 
 @keyframes on-air {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
 }
 
 @utility on-air-dot {
@@ -235,6 +252,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -247,8 +265,13 @@
 /* ---------- Journey physics & window ---------- */
 
 @keyframes scene-pan {
-  from { background-position: 0 bottom; }
-  to { background-position: -400px bottom; }
+  from {
+    background-position: 0 bottom;
+  }
+
+  to {
+    background-position: -400px bottom;
+  }
 }
 
 @utility scene-layer {
@@ -274,8 +297,13 @@
 }
 
 @keyframes rain-fall {
-  from { background-position: 0 0, 40px 0; }
-  to { background-position: -60px 400px, 10px 380px; }
+  from {
+    background-position: 0 0, 40px 0;
+  }
+
+  to {
+    background-position: -60px 400px, 10px 380px;
+  }
 }
 
 @utility rain-veil {
@@ -287,8 +315,15 @@
 }
 
 @keyframes handle-swing {
-  0%, 100% { transform: rotate(-3deg); }
-  50% { transform: rotate(3deg); }
+
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+
+  50% {
+    transform: rotate(3deg);
+  }
 }
 
 @utility handle-swing {
@@ -297,9 +332,22 @@
 }
 
 @keyframes depot-shake {
-  0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.7; }
-  25% { transform: translate3d(0.6px, -0.5px, 0); opacity: 1; }
-  75% { transform: translate3d(-0.6px, 0.5px, 0); opacity: 0.85; }
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.7;
+  }
+
+  25% {
+    transform: translate3d(0.6px, -0.5px, 0);
+    opacity: 1;
+  }
+
+  75% {
+    transform: translate3d(-0.6px, 0.5px, 0);
+    opacity: 0.85;
+  }
 }
 
 @utility depot-shake {
@@ -307,20 +355,46 @@
 }
 
 @keyframes bus-idle {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1.04) rotate(0deg); }
-  50% { transform: translate3d(-0.4%, 0.35%, 0) scale(1.04) rotate(0.12deg); }
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.04) rotate(0deg);
+  }
+
+  50% {
+    transform: translate3d(-0.4%, 0.35%, 0) scale(1.04) rotate(0.12deg);
+  }
 }
 
 @keyframes bus-cruise {
-  0% { transform: translate3d(0, 0, 0) scale(1.06); }
-  20% { transform: translate3d(-0.5%, -0.5%, 0) scale(1.06); }
-  45% { transform: translate3d(0.3%, 0.45%, 0) scale(1.062); }
-  70% { transform: translate3d(-0.35%, 0.2%, 0) scale(1.06); }
-  100% { transform: translate3d(0, 0, 0) scale(1.06); }
+  0% {
+    transform: translate3d(0, 0, 0) scale(1.06);
+  }
+
+  20% {
+    transform: translate3d(-0.5%, -0.5%, 0) scale(1.06);
+  }
+
+  45% {
+    transform: translate3d(0.3%, 0.45%, 0) scale(1.062);
+  }
+
+  70% {
+    transform: translate3d(-0.35%, 0.2%, 0) scale(1.06);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.06);
+  }
 }
 
-@utility bus-idle { animation: bus-idle 16s ease-in-out infinite; }
-@utility bus-cruise { animation: bus-cruise 1.5s ease-in-out infinite; }
+@utility bus-idle {
+  animation: bus-idle 16s ease-in-out infinite;
+}
+
+@utility bus-cruise {
+  animation: bus-cruise 1.5s ease-in-out infinite;
+}
 
 @utility ticket-paper {
   background: oklch(0.97 0.03 92);
@@ -335,20 +409,47 @@
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes scale-in {
-  from { transform: scale(0.7); opacity: 0.4; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.7);
+    opacity: 0.4;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes shayari-fade {
-  0% { opacity: 0; transform: translateY(6px); }
-  12% { opacity: 1; transform: translateY(0); }
-  88% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-6px); }
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  12% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  88% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
 }
 
 @utility shayari-line {
@@ -356,28 +457,66 @@
 }
 
 @keyframes bus-bob {
-  0%, 100% { transform: translateY(0) rotate(-1.2deg); }
-  50% { transform: translateY(-1.5px) rotate(1.2deg); }
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1.2deg);
+  }
+
+  50% {
+    transform: translateY(-1.5px) rotate(1.2deg);
+  }
 }
 
 @keyframes rail-sweep {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(500%); }
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(500%);
+  }
 }
 
 @keyframes dot-ripple {
-  0% { transform: scale(1); opacity: 0.8; }
-  100% { transform: scale(2.6); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
 }
 
 /* Clock colon blink — visible 0.6s, invisible 0.4s per second */
 @keyframes clock-blink {
-  0%, 60%  { opacity: 1; }
-  61%, 100% { opacity: 0; }
+
+  0%,
+  60% {
+    opacity: 1;
+  }
+
+  61%,
+  100% {
+    opacity: 0;
+  }
 }
 
 /* Green live dot gentle pulse */
 @keyframes dot-pulse {
-  0%, 100% { opacity: 1;   transform: scale(1);    box-shadow: 0 0 8px 2px oklch(0.78 0.19 145 / 0.55); }
-  50%       { opacity: 0.4; transform: scale(0.75); box-shadow: 0 0 2px 1px oklch(0.78 0.19 145 / 0.15); }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 8px 2px oklch(0.78 0.19 145 / 0.55);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(0.75);
+    box-shadow: 0 0 2px 1px oklch(0.78 0.19 145 / 0.15);
+  }
 }

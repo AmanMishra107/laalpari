@@ -20,26 +20,9 @@ import { useSpotify } from "@/lib/spotify/useSpotify";
 import { useSpotifyEmbed } from "@/lib/spotify/useEmbed";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "LaalPari--Radio" },
-      {
-        name: "description",
-        content:
-          "A Lal Pari time journey: ride an old Maharashtra ST bus from Pune to Satara through six stops and seven decades of Bollywood music.",
-      },
-      { property: "og:title", content: "BUS.WTF — The Lal Pari Time Journey" },
-      {
-        property: "og:description",
-        content:
-          "One journey. Six stops. Seven decades. Window seat. Old songs. Long route.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
   component: Index,
 });
+
 
 function Index() {
   const j = useJourney();

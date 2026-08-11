@@ -3,18 +3,9 @@ import { useEffect, useState } from "react";
 import { completeLogin } from "@/lib/spotify/auth";
 
 export const Route = createFileRoute("/callback")({
-  head: () => ({
-    meta: [
-      { title: "Connecting Spotify — BUS.WTF" },
-      { name: "description", content: "Finishing the Spotify connection for BUS.WTF window seat radio." },
-      { property: "og:title", content: "Connecting Spotify — BUS.WTF" },
-      { property: "og:description", content: "Finishing the Spotify connection for BUS.WTF window seat radio." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
   component: Callback,
 });
+
 
 function Callback() {
   const navigate = useNavigate();
