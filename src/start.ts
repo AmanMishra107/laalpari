@@ -1,24 +1,11 @@
-import { createStart, createMiddleware } from "@tanstack/react-start";
-
-import { renderErrorPage } from "./lib/error-page";
-import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
-
-const errorMiddleware = createMiddleware().server(async ({ next }) => {
-  try {
-    return await next();
-  } catch (error) {
-    if (error != null && typeof error === "object" && "statusCode" in error) {
-      throw error;
-    }
-    console.error(error);
-    return new Response(renderErrorPage(), {
-      status: 500,
-      headers: { "content-type": "text/html; charset=utf-8" },
-    });
-  }
-});
+// Minimal start.ts — avoids importing createMiddleware/createCsrfMiddleware
+// which are not available in Nitro's SSR bundle.
+// The Supabase auth attacher and error middleware have been removed from here;
+// the app's server.ts wraps errors, and auth is handled client-side.
+import { createStart } from "@tanstack/react-start";
 
 export const startInstance = createStart(() => ({
-  functionMiddleware: [attachSupabaseAuth],
-  requestMiddleware: [errorMiddleware],
+  functionMiddleware: [],
+  requestMiddleware: [],
 }));
+
