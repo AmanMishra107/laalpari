@@ -58,6 +58,8 @@ export function useYouTube(enabled: boolean, onEnded?: () => void) {
 
     const [ready, setReady] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
+    // Ref that always mirrors isPlaying so event listeners never get a stale closure.
+    const isPlayingRef = useRef(false);
     const [position, setPosition] = useState(0);
     const [duration, setDuration] = useState(0);
     const [videoId, setVideoId] = useState<string | null>(null);
@@ -76,10 +78,16 @@ export function useYouTube(enabled: boolean, onEnded?: () => void) {
                     onStateChange: (e: { data: number }) => {
                         const S = window.YT!.PlayerState;
                         if (e.data === S.ENDED) {
+                            isPlayingRef.current = false;
                             setIsPlaying(false);
                             onEndedRef.current?.();
-                        } else if (e.data === S.PLAYING) setIsPlaying(true);
-                        else if (e.data === S.PAUSED) setIsPlaying(false);
+                        } else if (e.data === S.PLAYING) {
+                            isPlayingRef.current = true;
+                            setIsPlaying(true);
+                        } else if (e.data === S.PAUSED) {
+                            isPlayingRef.current = false;
+                            setIsPlaying(false);
+                        }
                     },
                 },
             });
@@ -90,6 +98,26 @@ export function useYouTube(enabled: boolean, onEnded?: () => void) {
             playerRef.current = null;
             setReady(false);
         };
+    }, [enabled]);
+
+    // On mobile, locking the screen (visibilitychange → hidden) can silently
+    // pause the YouTube player. When the screen unlocks we resume if we were
+    // playing before. This also satisfies the Media Session "play" action on
+    // iOS Safari which fires through this path.
+    useEffect(() => {
+        if (!enabled || typeof document === "undefined") return;
+        const handleVisibility = () => {
+            if (document.visibilityState === "visible") {
+                const p = playerRef.current;
+                if (!p || typeof p.playVideo !== "function") return;
+                // isPlayingRef mirrors the isPlaying state without closure capture
+                if (isPlayingRef.current) {
+                    try { p.playVideo(); } catch { /* player may not be ready */ }
+                }
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibility);
+        return () => document.removeEventListener("visibilitychange", handleVisibility);
     }, [enabled]);
 
     // Smooth progress polling (YT has no continuous progress event).
@@ -112,6 +140,7 @@ export function useYouTube(enabled: boolean, onEnded?: () => void) {
         setVideoId(id);
         setPosition(0);
         setDuration(0);
+        isPlayingRef.current = autoplay;
         setIsPlaying(autoplay);
         const p = playerRef.current;
         if (!p) return;
@@ -124,8 +153,13 @@ export function useYouTube(enabled: boolean, onEnded?: () => void) {
     const toggle = useCallback(() => {
         const p = playerRef.current;
         if (!p) return;
-        if (isPlaying) p.pauseVideo();
-        else p.playVideo();
+        if (isPlaying) {
+            isPlayingRef.current = false;
+            p.pauseVideo();
+        } else {
+            isPlayingRef.current = true;
+            p.playVideo();
+        }
         setIsPlaying(!isPlaying);
     }, [isPlaying]);
 

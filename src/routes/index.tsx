@@ -21,6 +21,7 @@ import { useSpotifyEmbed } from "@/lib/spotify/useEmbed";
 import { useYouTube } from "@/lib/youtube/useYouTube";
 import { getYouTubePlaylist } from "@/lib/youtube/playlist.functions.ts";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useMediaSession } from "@/hooks/useMediaSession";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -263,8 +264,51 @@ function Index() {
     ? queueReady && Boolean(queue[0]) && yt.ready
     : usePremium || (queueReady && Boolean(queue[0]) && embed.ready);
 
+  // ── Media Session API ─────────────────────────────────────────────────────
+  // Registering with the browser's Media Session API is what tells the OS this
+  // tab is actively playing audio so it survives screen lock on Android/iOS.
+  // It also populates the lock-screen card with the track title + controls.
+  const msTitle   = current?.title  ?? s.track?.name    ?? first.title;
+  const msArtist  = current?.artist ?? s.track?.artists ?? first.artist;
+  const msArtwork = artwork ?? undefined;
+  const msPlaying = ytActive ? yt.isPlaying : usePremium ? isPlaying : embed.isPlaying;
+  const msDuration = ytActive ? yt.duration : usePremium ? s.duration || 0 : embed.duration;
+  const msPosition = ytActive ? yt.position : usePremium ? s.progress : embed.position;
 
-
+  useMediaSession({
+    title:    msTitle,
+    artist:   msArtist,
+    artwork:  msArtwork ?? null,
+    isPlaying: msPlaying,
+    duration:  msDuration,
+    position:  msPosition,
+    onPlay:  () => {
+      if (ytActive) {
+        if (started && yt.videoId) yt.toggle();
+        else void playIndex(queueIndex ?? 0);
+      } else if (usePremium) {
+        if (s.track) void s.toggle();
+        else void playIndex(0);
+      } else {
+        if (started && embed.uri) embed.toggle();
+        else void playIndex(queueIndex ?? 0);
+      }
+    },
+    onPause: () => {
+      if (ytActive) yt.toggle();
+      else if (usePremium) void s.toggle();
+      else embed.toggle();
+    },
+    onNext: goNext,
+    onPrev: goPrev,
+    onSeek: (ms) =>
+      ytActive
+        ? yt.seek(Math.floor(ms / 1000))
+        : usePremium
+          ? void s.seek?.(ms)
+          : embed.seek(Math.floor(ms / 1000)),
+  });
+  // ─────────────────────────────────────────────────────────────────────────
   return (
     <main className="relative h-dvh w-screen overflow-hidden bg-cream">
       {/* Static hand-painted hero scene */}
